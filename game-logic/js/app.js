@@ -7,7 +7,8 @@ function initialize(){
   timer();
   setupGameGrid();
   setupPlayerGrid(6);
-  $('.game-gridsquare').on('click', playGame)
+  $('.game-gridsquare').on('click', playGame);
+  cpuPlayGame();
 }
 
 // Variables
@@ -67,27 +68,38 @@ function playGame() {
   var playerSelected     = $('#player-gridsquare-5');
 
   if (gridsquareSelected.html() === playerSelected.html()) {
-    playerScore++;
-    gridsquareSelected.css('background', 'green');
-    updateScore(playerScore, 'green');
+
+    updateScore(gridsquareSelected, true);
     changeGameGrid(gridsquareSelected);
     playerGrid.pop();
     setupPlayerGrid(1);
   } else {
-    if (playerScore > 0) { playerScore--; }
-    gridsquareSelected.css('background', 'red');
-    updateScore(playerScore, 'red');
+    updateScore(gridsquareSelected, false);
   }
   setTimeout(function(){ gridsquareSelected.css('background', 'none') }, 200);
 }
 
-function updateScore(playerScore, color) {
-  $('#player-score')
-    .html('Score: '+playerScore)
-    .css('color', color)
-  setTimeout(function(){ $('#player-score').css('color', 'black') }, 200)
+//Update the score of the player upon correct and incorrect choices
+function updateScore(gridsquareSelected, value) {
+  if (value === true) {
+    playerScore++;
+    gridsquareSelected.css('background', 'green');
+    $('#player-score')
+      .html('Score: '+playerScore)
+      .css('color', 'green');
+    setTimeout(function(){ $('#player-score').css('color', 'black') }, 200);
+  } else {
+    if (playerScore > 0) playerScore--; 
+
+    gridsquareSelected.css('background', 'red');
+    $('#player-score')
+      .html('Score: '+playerScore)
+      .css('color', 'red');
+    setTimeout(function(){ $('#player-score').css('color', 'black') }, 200)
+  }
 }
 
+//Swap positions on the grid when correct square is clicked
 function changeGameGrid(gridsquareSelected) {
   var gridsquareSelectedIndex = parseInt(gridsquareSelected.attr('id'));
   var gridsquareToSwapIndex   = Math.floor(Math.random()*gameGrid.length);
@@ -96,8 +108,39 @@ function changeGameGrid(gridsquareSelected) {
   gameGrid[gridsquareSelectedIndex] = gameGrid[gridsquareToSwapIndex];
   gameGrid[gridsquareToSwapIndex]   = gridsquareSelected;
 
-
   $('#'+gridsquareSelectedIndex).html(gameGrid[gridsquareSelectedIndex]);
   $('#'+gridsquareToSwapIndex).html(gameGrid[gridsquareToSwapIndex]);
 }
 
+//CPU Player
+function cpuClickEvent() {
+  var cpuSelectedShape = $('#player-gridsquare-5').html();
+  var cpuSelectedShapeIndex = gameGrid.indexOf(cpuSelectedShape);
+  return $('#'+cpuSelectedShapeIndex).trigger('click');
+}
+
+function cpuPlayGame() {
+  setTimeout(function(){
+    console.log(gameTime);
+    while (gameTime > 0) {
+      console.log(gameTime);
+      setInterval(cpuClickEvent(), 1000);
+    }
+  }, 1000);
+}
+
+function cpuPlayGame() {
+  var max = 15;
+  var min = 10;
+  var interval = (Math.floor(Math.random() * (max - min + 1)) + min)*100;
+
+  var cpuMove = setInterval(function(){
+
+    if(gameTime > 0) {
+      setInterval(cpuClickEvent());
+    } else {
+      clearInterval(cpuPlayGame);
+      $('.game-gridsquare').off('click');
+    }
+  }, interval);
+}
