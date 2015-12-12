@@ -3,16 +3,15 @@ $(function(){
   initialize();
 })
 
+// Runs on page load
 function initialize(){
-
+  timer();
   setupGameGrid();
   setupPlayerGrid(6);
-  timer();
   $('.game-gridsquare').on('click', playGame)
 }
 
-// Need to assign shapes to game-gridsquares
-
+// Variables
 var shapes       = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
 var gameGridsize = Math.pow(3,2);
 var gameGrid     = [];
@@ -20,6 +19,21 @@ var playerGrid   = [];
 var playerScore  = 0;
 var gameTime     = 30;
 
+// Timer function
+function timer() {
+  $('#timer').html('Time: ' + gameTime);
+  var timeRemaining = setInterval(function(){
+    if(gameTime > 0) {
+      gameTime--;
+    } else {
+      clearInterval(timeRemaining);
+      $('.game-gridsquare').off('click');
+    }
+    $('#timer').html('Time: ' + gameTime);
+  }, 1000);
+}
+
+//Setup game grid and player grid
 function setupGameGrid(){
 
   for (var i = 0; i < gameGridsize; i++) {
@@ -51,20 +65,7 @@ function setupPlayerGrid(number) {
   return playerGrid;
 }
 
-function timer() {
-  $('#timer').html('Time: '+gameTime);
-  setInterval(timeRemaining, 1000);
-}
-
-function timeRemaining() {
-  if (gameTime > 0) {
-    gameTime--;
-    $('#timer').html('Time: '+ gameTime);
-  } else {
-    gameTime = 30;
-  }
-}
-
+//Game play function upon square click
 function playGame() {
   var gridsquareSelected = $(this);
   var playerSelected     = $('#player-gridsquare-5');
@@ -77,7 +78,7 @@ function playGame() {
     setupPlayerGrid(1);
   } else {
     gridsquareSelected.css('background', 'red');
-    playerScore--;
+    if (playerScore > 0) { playerScore--; }
     updateScore(playerScore, 'red');
   }
   setTimeout(function(){ gridsquareSelected.css('background', 'none') }, 200);
