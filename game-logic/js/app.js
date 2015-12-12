@@ -4,8 +4,10 @@ $(function(){
 })
 
 function initialize(){
+
   setupGameGrid();
   setupPlayerGrid(6);
+  timer();
   $('.game-gridsquare').on('click', playGame)
 }
 
@@ -16,6 +18,7 @@ var gameGridsize = Math.pow(3,2);
 var gameGrid     = [];
 var playerGrid   = [];
 var playerScore  = 0;
+var gameTime     = 30;
 
 function setupGameGrid(){
 
@@ -48,6 +51,20 @@ function setupPlayerGrid(number) {
   return playerGrid;
 }
 
+function timer() {
+  $('#timer').html('Time: '+gameTime);
+  setInterval(timeRemaining, 1000);
+}
+
+function timeRemaining() {
+  if (gameTime > 0) {
+    gameTime--;
+    $('#timer').html('Time: '+ gameTime);
+  } else {
+    gameTime = 30;
+  }
+}
+
 function playGame() {
   var gridsquareSelected = $(this);
   var playerSelected     = $('#player-gridsquare-5');
@@ -55,12 +72,21 @@ function playGame() {
   if (gridsquareSelected.html() === playerSelected.html()) {
     gridsquareSelected.css('background', 'green');
     playerScore++;
+    updateScore(playerScore, 'green');
     playerGrid.pop();
     setupPlayerGrid(1);
   } else {
     gridsquareSelected.css('background', 'red');
     playerScore--;
+    updateScore(playerScore, 'red');
   }
   setTimeout(function(){ gridsquareSelected.css('background', 'none') }, 200);
+}
+
+function updateScore(playerScore, color) {
+  $('#player-score')
+    .html('Score: '+playerScore)
+    .css('color', color)
+  setTimeout(function(){ $('#player-score').css('color', 'black') }, 200)
 }
 

@@ -5,6 +5,12 @@ body {
   text-align: center;
 }
 
+/*Header styling*/
+
+header ul li {
+  display: inline;
+}
+
 /*Grid styling*/
 
 .player-grid {
