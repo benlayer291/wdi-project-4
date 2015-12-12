@@ -1,5 +1,4 @@
 $(function(){
-  console.log('working');
   initialize();
 })
 
@@ -35,7 +34,6 @@ function timer() {
 
 //Setup game grid and player grid
 function setupGameGrid(){
-
   for (var i = 0; i < gameGridsize; i++) {
 
     var shape = shapes[Math.floor(Math.random()*shapes.length)];
@@ -43,11 +41,9 @@ function setupGameGrid(){
     
     gameGrid.push(shape);
     shapes.splice(shapeIndex, 1);
+    $('#'+i).html(gameGrid[i]);
   }
 
-  for (var i = 0; i < gameGridsize; i++) {
-    $('#game-gridsquare-'+i).html(gameGrid[i]);
-  }
   shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
   return gameGrid;
 }
@@ -71,14 +67,15 @@ function playGame() {
   var playerSelected     = $('#player-gridsquare-5');
 
   if (gridsquareSelected.html() === playerSelected.html()) {
-    gridsquareSelected.css('background', 'green');
     playerScore++;
+    gridsquareSelected.css('background', 'green');
     updateScore(playerScore, 'green');
+    changeGameGrid(gridsquareSelected);
     playerGrid.pop();
     setupPlayerGrid(1);
   } else {
-    gridsquareSelected.css('background', 'red');
     if (playerScore > 0) { playerScore--; }
+    gridsquareSelected.css('background', 'red');
     updateScore(playerScore, 'red');
   }
   setTimeout(function(){ gridsquareSelected.css('background', 'none') }, 200);
@@ -89,5 +86,18 @@ function updateScore(playerScore, color) {
     .html('Score: '+playerScore)
     .css('color', color)
   setTimeout(function(){ $('#player-score').css('color', 'black') }, 200)
+}
+
+function changeGameGrid(gridsquareSelected) {
+  var gridsquareSelectedIndex = parseInt(gridsquareSelected.attr('id'));
+  var gridsquareToSwapIndex   = Math.floor(Math.random()*gameGrid.length);
+
+  gridsquareSelected = gameGrid[gridsquareSelectedIndex];
+  gameGrid[gridsquareSelectedIndex] = gameGrid[gridsquareToSwapIndex];
+  gameGrid[gridsquareToSwapIndex]   = gridsquareSelected;
+
+
+  $('#'+gridsquareSelectedIndex).html(gameGrid[gridsquareSelectedIndex]);
+  $('#'+gridsquareToSwapIndex).html(gameGrid[gridsquareToSwapIndex]);
 }
 
