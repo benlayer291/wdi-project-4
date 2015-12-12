@@ -7,13 +7,32 @@ body {
 
 /*Grid styling*/
 
-.grid {
+.player-grid {
   width: 450px;
-  height: 450px;
-  margin: 0 auto;
+  height: 90px;
+  margin: 25px auto;
 }
 
-.gridsquare {
+.player-gridsquare {
+  width: 88px;
+  height: 88px;
+  float: left;
+  border: 1px solid black;
+}
+
+.player-grid-selected{
+  width: 90px;
+  height: 90px;
+  margin: 25px auto;
+}
+
+.game-grid {
+  width: 450px;
+  height: 450px;
+  margin: 25px auto;
+}
+
+.game-gridsquare {
   width: 148px;
   height: 148px;
   float: left;
