@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WDI-Project-4</title>
+  <!-- scripts -->
+  <!-- stylesheets -->
+  <link rel="stylesheet" type="text/css" href="./css/reset.css">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+<body>
+
+  <header>
+    <ul>
+      <li><h1>SHAPES</h1></li>
+      <li id='player-score'>Score: 0</li>
+      <li class='timer'>Time: </li>
+    </ul>
+  </header>
+
+  <main>
+
+    <!-- <ul class='player-grid'>
+      <li class='player-gridsquare' id='player-gridsquare-0'></li>
+      <li class='player-gridsquare' id='player-gridsquare-1'></li>
+      <li class='player-gridsquare' id='player-gridsquare-2'></li>
+      <li class='player-gridsquare' id='player-gridsquare-3'></li>
+      <li class='player-gridsquare' id='player-gridsquare-4'></li>
+    </ul> -->
+
+    <ul class='player-grid-selected'>
+      <h2>Player Shape:</h2>
+      <li class='player-gridsquare' id='player-gridsquare-5'></li>
+    </ul>
+
+    <ul class='game-grid'>
+      <li class='game-gridsquare' id='0'></li>
+      <li class='game-gridsquare' id='1'></li>
+      <li class='game-gridsquare' id='2'></li>
+      <li class='game-gridsquare' id='3'></li>
+      <li class='game-gridsquare' id='4'></li>
+      <li class='game-gridsquare' id='5'></li>
+      <li class='game-gridsquare' id='6'></li>
+      <li class='game-gridsquare' id='7'></li>
+      <li class='game-gridsquare' id='8'></li>
+    </ul>
+
+    <ul class='cpu-grid-selected'>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-5'></li>
+      <h2>CPU Shape:</h2>
+    </ul>
+
+    <!-- <ul class='cpu-grid'>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-0'></li>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-1'></li>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-2'></li>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-3'></li>
+      <li class='cpu-gridsquare' id='cpu-gridsquare-4'></li>
+    </ul> -->
+  </main>
+
+  <footer>
+    <ul>
+      <li id='cpu-score'>Score: 0</li>
+      <li class='timer'>Time: </li>
+    </ul>
+  </footer>
+  
+  <!-- scripts -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+  </script>
+
+</body>
+</html>

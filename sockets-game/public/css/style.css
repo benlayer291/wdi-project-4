@@ -1,0 +1,77 @@
+/*General styling*/
+body {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/*Header styling*/
+
+header ul li {
+  display: inline;
+}
+
+/*Grid styling*/
+
+.player-grid {
+  width: 450px;
+  height: 90px;
+  margin: 25px auto;
+}
+
+.player-gridsquare {
+  width: 88px;
+  height: 88px;
+  line-height: 88px;
+  float: left;
+  border: 1px solid black;
+  font-size: 18px;
+}
+
+.player-grid-selected{
+  width: 90px;
+  height: 90px;
+  margin: 25px auto;
+}
+
+.cpu-grid {
+  width: 450px;
+  height: 90px;
+  margin: 25px auto;
+}
+
+.cpu-gridsquare {
+  width: 88px;
+  height: 88px;
+  line-height: 88px;
+  float: left;
+  border: 1px solid black;
+  font-size: 18px;
+}
+
+.cpu-grid-selected{
+  width: 90px;
+  height: 90px;
+  margin: 25px auto;
+}
+
+.game-grid {
+  width: 450px;
+  height: 450px;
+  margin: 25px auto;
+}
+
+.game-gridsquare {
+  width: 148px;
+  height: 148px;
+  line-height: 148px;
+  float: left;
+  border: 1px solid black;
+  font-size: 24px;
+}
+
+/*Footer styling*/
+
+footer ul li {
+  display: inline;
+}
