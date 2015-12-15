@@ -60,8 +60,19 @@ io.on('connection', function(socket){
     io.to(gameRoom).emit('start', game);
   })
 
-  socket.on("playingGame", function(socketId, squareClicked){
-    console.log (socketId, " just clicked ", squareClicked);
+  socket.on("playerGridSquare", function(socketId, playerShape) {
+    console.log(socketId, "'s loaded shape is: ", playerShape);
+  })
+
+  socket.on("playingGame", function(gameId, socketId, playerShape, squareClicked){
+    console.log (socketId, " just clicked ", squareClicked, ' in this game: ', gameId);
+    // var game        = games[gameId];
+    // var gameGrid    = game['main-grid'];
+    if (playerShape === squareClicked) {
+      console.log(socketId, ' got the grid choice correct!')
+    } else {
+      console.log(socketId, ' got the grid choice incorrect!')
+    }
   })
 
 });

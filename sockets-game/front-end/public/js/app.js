@@ -58,8 +58,12 @@ function inGame(gameid){
 }
 
 function playGame(){
-  console.log(socket.io.engine.id, ' just clicked ', $(this).html(), ' square');
-  socket.emit('playingGame', socket.io.engine.id, $(this).html());
+  var gameId        = $(this).data('gameid');
+  var socketId      = socket.io.engine.id;
+  var playerShape   = $('#player-selected-gridsquare').html();
+  var squareClicked = $(this).html();
+  console.log(socketId, ' just clicked ', squareClicked, ' square in this game ', gameId, ' and their selected shape is ', playerShape);
+  socket.emit('playingGame', gameId, socketId, playerShape, squareClicked);
 }
 
 //SOCKET LISTENING EVENTS
@@ -86,18 +90,27 @@ socket.on('addToListOfGames', function(game){
 
 socket.on('start', function(game){
   console.log(game);
+  console.log(game.id);
   console.log(game['main-grid']);
   // Timer
 
   // Setup main-grid when timer finishes- same for both players, comes from server side
   for (var i = 0; i < game['main-grid'].length; i++) {
-    $('#'+i).html(game['main-grid'][i]);
+    $('#'+i)
+      .html(game['main-grid'][i])
+      .attr('data-gameid', game.id);
   }
-  // Setup player-grid when timer finishes- different for each player, comes from client side
-  var playerGrid = [];
+  return setUpPlayerShape(game);
+});
+
+function setUpPlayerShape(game) {
+  // Setup player-grid, different for each player- comes from client side
+  var socketId    = socket.io.engine.id;
+  // var playerGrid  = [];
   var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
-  playerGrid.push(playerShape);
+  // playerGrid.push(playerShape);
   console.log(playerShape);
   $('#player-selected-gridsquare').html(playerShape);
+  socket.emit('playerGridSquare', socketId, playerShape);
   return $('.game-gridsquare').on('click', playGame);
-})
+}
