@@ -66,10 +66,19 @@ io.on('connection', function(socket){
 
   socket.on("playingGame", function(gameId, socketId, playerShape, squareClicked){
     console.log (socketId, " just clicked ", squareClicked, ' in this game: ', gameId);
-    // var game        = games[gameId];
-    // var gameGrid    = game['main-grid'];
+    var game        = games[gameId];
+    var gameGrid    = game['main-grid'];
     if (playerShape === squareClicked) {
       console.log(socketId, ' got the grid choice correct!')
+      var squareClickedIndex = gameGrid.indexOf(squareClicked);
+      var squareToSwapIndex  = Math.floor(Math.random()*gameGrid.length);
+      console.log('Before ', gameGrid);
+      console.log('Square clicked: ', gameGrid[squareClickedIndex]);
+      console.log('Square to swap: ', gameGrid[squareToSwapIndex]);
+      gameGrid[squareClickedIndex] = gameGrid[squareToSwapIndex];
+      gameGrid[squareToSwapIndex]  = squareClicked;
+      console.log('After ', gameGrid);
+      io.to(gameRoom).emit('start', game);
     } else {
       console.log(socketId, ' got the grid choice incorrect!')
     }
