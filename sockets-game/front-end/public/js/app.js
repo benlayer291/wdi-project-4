@@ -83,8 +83,14 @@ socket.on('start', function(game){
   console.log(game);
   console.log(game['main-grid']);
   // Timer
-  // Setup grid when timer finishes
+  // Setup main-grid when timer finishes- same for both players
   for (var i = 0; i < game['main-grid'].length; i++) {
     $('#'+i).html(game['main-grid'][i]);
   }
+  // Setup player-grid when timer finishes- different for each player
+  var playerGrid = [];
+  var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
+  playerGrid.push(playerShape);
+  console.log(playerShape);
+  $('#player-selected-gridsquare').html(playerShape);
 })
