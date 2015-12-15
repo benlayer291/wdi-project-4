@@ -19,16 +19,16 @@
 // // sending to all clients in namespace 'myNamespace', include sender
 // io.of('myNamespace').emit('message', 'gg');
 
-// // sending to individual socketid
+// // sending to individual socketid (server-side)
 // socket.broadcast.to(socketid).emit('message', 'for your eyes only');
 
-// // join to subscribe the socket to a given channel:
+// // join to subscribe the socket to a given channel (server-side):
 // socket.join('some room');
 
-// // then simply use to or in (they are the same) when broadcasting or emitting:
+// // then simply use to or in (they are the same) when broadcasting or emitting (server-side)
 // io.to('some room').emit('some event'):
 
-// // leave to unsubscribe the socket to a given channel:
+// // leave to unsubscribe the socket to a given channel (server-side)
 // socket.leave('some room');
 
 var socket      = io.connect();
@@ -42,22 +42,22 @@ $(function(){
 function start(){
   event.preventDefault();
   socket.emit('newGame', socket.io.engine.id);
-
-  // Not DRY
-  gameChannel = 'game_' + socket.io.engine.id;
-  setupGameChannel()
 }
 
 function join(){
   event.preventDefault();
   var gameId = $(this).data('gameid');
   socket.emit('joinedGame', gameId, socket.io.engine.id)
-
-  // Not DRY
-  gameChannel = 'game_' + gameId;
-  setupGameChannel()
+  return inGame(gameId)
 }
 
+function inGame(gameid){
+  $(".game-list").hide();
+  $(".new-game-tools").hide();
+  return $(".message").html("<h2>You are playing in game: "+gameid+"</h2>")
+}
+
+//SOCKET LISTENING EVENTS
 socket.on('connect', function(){
   console.log('connected', socket.io.engine.id);
 });
@@ -72,14 +72,15 @@ socket.on('addToListOfGames', function(game){
   }
 })
 
-function setupGameChannel(){
-  socket.on(gameChannel, function(){
-    console.log("TESTING");
-  })
-}
+// ROOM ACTIONS
+// Start
+// Finish
+// Each player moves
+// Disappear of shape
+// Player scores increment
 
-
-function inGame(gameid){
-  $(".game-list").hide();
-  return $(".message").html("<h2>You are playing in game: "+gameid+"</h2>")
-}
+socket.on('start', function(game){
+  console.log(game);
+  // Timer
+  // Setup grid when timer finishes
+})

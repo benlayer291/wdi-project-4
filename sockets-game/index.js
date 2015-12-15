@@ -23,7 +23,7 @@ var games   = {};
 io.on('connection', function(socket){
   socket.on("newGame", function(socketId){
     console.log("Game started with id: ", socketId);
-    // If new game, create new game in database?
+    // If new game, create new game in database? The object below is like model in database
     games[socketId] = {
       id: socketId,
       players: []
@@ -32,6 +32,9 @@ io.on('connection', function(socket){
     games[socketId].players.push(socketId);
     // Add to list of games
     io.emit("addToListOfGames", games[socketId]);
+    // Join new room for that game
+    var gameRoom = "game_"+socketId;
+    socket.join(gameRoom);
   });
 
   socket.on("joinedGame", function(gameId, socketId) {
@@ -39,6 +42,9 @@ io.on('connection', function(socket){
     game.players.push(socketId)
     console.log(socketId, " just joined the game ", games[gameId]);
     // Send to all members of that game updating that a new player has joined
-    io.emit('game_'+gameId);
+    var gameRoom = "game_"+gameId;
+    socket.join(gameRoom);
+    games[gameId]['grid'] = [2,4,5,7,8,3,5,6,8,0,2,3,4];
+    io.to(gameRoom).emit('start', games[gameId]);
   })
 });
