@@ -22,8 +22,7 @@ var player   = {};
 var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
-io.on('connection', function(socket, req){
-  console.log(req);
+io.on('connection', function(socket){
   socket.on("newGame", function(socketId){
     console.log("Game started with id: ", socketId);
     // If new game, create new game in database? The object below is like model in database
@@ -34,12 +33,9 @@ io.on('connection', function(socket, req){
     // Save player
     player[socketId] = {
       id: socketId,
-      // name: req.body.name,
       score: 0
     }
-    // console.log("DA PLAYEERR", player[socketId]);
     games[socketId].players.push(player[socketId]);
-    // console.log("DA GAMEEE", games[socketId]);
     // Add to list of games
     io.emit("addToListOfGames", games[socketId]);
     // Join new room for that game

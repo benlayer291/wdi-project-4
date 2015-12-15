@@ -63,9 +63,9 @@ function setUpPlayerShape(game) {
   var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
 
   console.log(playerShape);
-  $('#player-selected-gridsquare').html(playerShape);
+  return $('#player-selected-gridsquare').html(playerShape);
   // socket.emit('playerGridSquare', socketId, playerShape);
-  return $('.game-gridsquare').on('click', playGame);
+  // return $('.game-gridsquare').on('click', playGame);
 }
 
 function playGame(){
@@ -75,6 +75,23 @@ function playGame(){
   var squareClicked = $(this).html();
   console.log(socketId, ' just clicked ', squareClicked, ' square in this game ', gameId, ' and their selected shape is ', playerShape);
   socket.emit('playingGame', gameId, socketId, playerShape, squareClicked);
+}
+
+function gameTimer() {
+  var gameTime      = 30;
+  // GameTimer
+  $('.timer').html('Time: ' + gameTime);
+  var timeRemaining = setInterval(function(){
+    if(gameTime > 0) {
+      gameTime--;
+    } else {
+      clearInterval(timeRemaining);
+      $('.game-gridsquare').off('click');
+    }
+    $('.timer').html('Time: ' + gameTime);
+  }, 1000);
+  console.log('timer');
+  return $('.game-gridsquare').on('click', playGame);
 }
 
 //SOCKET LISTENING EVENTS
@@ -103,8 +120,18 @@ socket.on('start', function(game){
   console.log(game);
   console.log(game.id);
   console.log(game['main-grid']);
-  // Timer
-
+  var countdownTime = 5;
+  // Countdown Timer
+  $('.timer').html('Time: ' + countdownTime);
+  var countdownRemaining = setInterval(function(){
+    if(countdownTime > 0) {
+      countdownTime--;
+    } else {
+      clearInterval(countdownRemaining);
+      gameTimer();
+    }
+    $('.timer').html('Time: ' + countdownTime);
+  }, 1000);
   // Setup main-grid when timer finishes- same for both players, comes from server side
   for (var i = 0; i < game['main-grid'].length; i++) {
     $('#'+i)
@@ -139,11 +166,5 @@ socket.on('correctChoice', function(game, socketId){
   for (var i = 0; i < game.players.length; i++) {
     console.log(game.players[i]);
     $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);
-  }
-})
-
-socket.on('updateScore', function(game, socketId){
-  if (socketId === socket.io.engine.id) {
-
   }
 })
