@@ -76,29 +76,35 @@ io.on('connection', function(socket){
 
 socket.on("playingGame", function(gameId, socketId, playerShape, squareClicked){
     // console.log (socketId, " just clicked ", squareClicked, ' in this game: ', gameId);
+
     var game        = games[gameId];
     var gameGrid    = game['main-grid'];
+
+    //correct choice
     if (playerShape === squareClicked) {
       console.log(socketId, ' got the grid choice correct!')
       var squareClickedIndex = gameGrid.indexOf(squareClicked);
       var squareToSwapIndex  = Math.floor(Math.random()*gameGrid.length);
-      // console.log('Before ', gameGrid);
-      // console.log('Square clicked: ', gameGrid[squareClickedIndex]);
-      // console.log('Square to swap: ', gameGrid[squareToSwapIndex]);
+      // change the grid
       gameGrid[squareClickedIndex] = gameGrid[squareToSwapIndex];
       gameGrid[squareToSwapIndex]  = squareClicked;
-      // console.log('After ', gameGrid);
+      // change the score
       for (var i = 0; i < game.players.length; i++) {
         if (game.players[i].id === socketId) {
           game.players[i].score++;
         }
       }
+      //send to front-end
       console.log('PLAYERS SCORES:', game.players);
       io.to(gameRoom).emit('correctChoice', game, socketId);
     } else {
-      // console.log(socketId, ' got the grid choice incorrect!')
       io.to(gameRoom).emit('incorrectChoice', game, socketId);
     }
   })
+
+socket.on("endGame", function(game){
+  console.log("Game that is ending", games[game.id]);
+  io.to(gameRoom).emit('checkWinner');
+})
 
 });

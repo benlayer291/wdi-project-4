@@ -64,8 +64,6 @@ function setUpPlayerShape(game) {
 
   console.log(playerShape);
   return $('#player-selected-gridsquare').html(playerShape);
-  // socket.emit('playerGridSquare', socketId, playerShape);
-  // return $('.game-gridsquare').on('click', playGame);
 }
 
 function playGame(){
@@ -73,26 +71,59 @@ function playGame(){
   var socketId      = socket.io.engine.id;
   var playerShape   = $('#player-selected-gridsquare').html();
   var squareClicked = $(this).html();
-  console.log(socketId, ' just clicked ', squareClicked, ' square in this game ', gameId, ' and their selected shape is ', playerShape);
   socket.emit('playingGame', gameId, socketId, playerShape, squareClicked);
 }
 
+
 function gameTimer() {
-  var gameTime      = 30;
-  // GameTimer
+  var gameTime = 30;
+  
   $('.timer').html('Time: ' + gameTime);
+  setTimeout(function(){ $('.notifications').empty() }, 1000)
   var timeRemaining = setInterval(function(){
     if(gameTime > 0) {
       gameTime--;
     } else {
-      clearInterval(timeRemaining);
+      $('.notifications').append('<li>Game Over!</li>');
       $('.game-gridsquare').off('click');
+      clearInterval(timeRemaining);
+      // endGame(game);
     }
     $('.timer').html('Time: ' + gameTime);
   }, 1000);
-  console.log('timer');
-  return $('.game-gridsquare').on('click', playGame);
+  $('.game-gridsquare').on('click', playGame);
+  return gameTime;
 }
+
+// function endGame(game) {
+//   console.log(game);
+//   console.log(game.players[0]['score']);
+//   for (var i = 0; i < game.players.length-1; i++){
+//     if (game.players[i]['score'] > game.players[i+1]['score']) {
+//       console.log(game.players[i].id, "wins");
+//       console.log(game.players);
+//       if (game.players[i]['id'] === socket.io.engine.id) {
+//         setTimeout(function(){ $('.notifications').append('<li>You Win!</li>') }, 1000)
+//       } else{
+//         setTimeout(function(){ $('.notifications').append('<li>You Lose!</li>') }, 1000)
+//       }
+
+//     } else if (game.players[i]['score'] === game.players[i+1]['score']) {
+//       console.log("draw!");
+//       console.log(game.players);
+//       setTimeout(function(){ $('.notifications').append('<li>Draw!</li>') }, 1000)
+
+//     } else {
+//       console.log(game.players[i+1].id, "wins");
+//       console.log(game.players);
+//       if (game.players[i+1]['id'] === socket.io.engine.id) {
+//         setTimeout(function(){ $('.notifications').append('<li>You Win!</li>') }, 1000)
+//       } else{
+//         setTimeout(function(){ $('.notifications').append('<li>You Lose!</li>') }, 1000)
+//       }
+//     }
+//   }
+// }
 
 //SOCKET LISTENING EVENTS
 socket.on('connect', function(){
@@ -109,35 +140,32 @@ socket.on('addToListOfGames', function(game){
   }
 })
 
-// ROOM ACTIONS
-// Start
-// Finish
-// Each player moves
-// Disappear of shape
-// Player scores increment
-
 socket.on('start', function(game){
-  console.log(game);
-  console.log(game.id);
-  console.log(game['main-grid']);
   var countdownTime = 5;
+
   // Countdown Timer
+  $('.notifications').append('<li>Get Ready!</li>');
   $('.timer').html('Time: ' + countdownTime);
   var countdownRemaining = setInterval(function(){
     if(countdownTime > 0) {
       countdownTime--;
     } else {
+      $('.notifications')
+        .empty()
+        .append('<li>Go!</li>');
       clearInterval(countdownRemaining);
       gameTimer();
     }
     $('.timer').html('Time: ' + countdownTime);
   }, 1000);
+
   // Setup main-grid when timer finishes- same for both players, comes from server side
   for (var i = 0; i < game['main-grid'].length; i++) {
     $('#'+i)
       .html(game['main-grid'][i])
       .attr('data-gameid', game.id);
   }
+
   // Setup scores with player socket ids
   for (var i = 0; i < game.players.length; i++) {
     $('.score').append('<li id=score-'+game.players[i].id+'>Score:'+game.players[i].score+'</li>')
@@ -147,21 +175,22 @@ socket.on('start', function(game){
 });
 
 socket.on('correctChoice', function(game, socketId){
+
   // Update the main grid
   for (var i = 0; i < game['main-grid'].length; i++) {
     $('#'+i)
     .html(game['main-grid'][i])
     .attr('data-gameid', game.id);
   }
+
   // Player gets a new shape
   if (socketId === socket.io.engine.id) {
     var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
     console.log(playerShape);
     $('#player-selected-gridsquare').html(playerShape);
-    // socket.emit('playerGridSquare', socketId, playerShape);
   }
+
   // Player gets a point
-  // console.log("SCORER: ",socketId);
   console.log("SCORES: ", game.players);
   for (var i = 0; i < game.players.length; i++) {
     console.log(game.players[i]);
