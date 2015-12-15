@@ -57,6 +57,11 @@ function inGame(gameid){
   return $(".message").html("<h2>You are playing in game: "+gameid+"</h2>")
 }
 
+function playGame(){
+  console.log(socket.io.engine.id, ' just clicked ', $(this).html(), ' square');
+  socket.emit('playingGame', socket.io.engine.id, $(this).html());
+}
+
 //SOCKET LISTENING EVENTS
 socket.on('connect', function(){
   console.log('connected', socket.io.engine.id);
@@ -83,14 +88,16 @@ socket.on('start', function(game){
   console.log(game);
   console.log(game['main-grid']);
   // Timer
-  // Setup main-grid when timer finishes- same for both players
+
+  // Setup main-grid when timer finishes- same for both players, comes from server side
   for (var i = 0; i < game['main-grid'].length; i++) {
     $('#'+i).html(game['main-grid'][i]);
   }
-  // Setup player-grid when timer finishes- different for each player
+  // Setup player-grid when timer finishes- different for each player, comes from client side
   var playerGrid = [];
   var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
   playerGrid.push(playerShape);
   console.log(playerShape);
   $('#player-selected-gridsquare').html(playerShape);
+  return $('.game-gridsquare').on('click', playGame);
 })

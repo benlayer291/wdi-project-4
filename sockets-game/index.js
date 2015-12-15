@@ -22,6 +22,7 @@ var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
 io.on('connection', function(socket){
+
   socket.on("newGame", function(socketId){
     console.log("Game started with id: ", socketId);
     // If new game, create new game in database? The object below is like model in database
@@ -58,4 +59,9 @@ io.on('connection', function(socket){
     // Send information about the game to the gameRoom on the client side
     io.to(gameRoom).emit('start', game);
   })
+
+  socket.on("playingGame", function(socketId, squareClicked){
+    console.log (socketId, " just clicked ", squareClicked);
+  })
+
 });
