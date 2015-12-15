@@ -81,6 +81,10 @@ socket.on('addToListOfGames', function(game){
 
 socket.on('start', function(game){
   console.log(game);
+  console.log(game['main-grid']);
   // Timer
   // Setup grid when timer finishes
+  for (var i = 0; i < game['main-grid'].length; i++) {
+    $('#'+i).html(game['main-grid'][i]);
+  }
 })

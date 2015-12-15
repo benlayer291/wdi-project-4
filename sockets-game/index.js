@@ -16,8 +16,9 @@ http.listen(port, function(){
 app.use(express.static(__dirname + '/front-end/public'));
 
 // Create a socket.io server and relate it to the node.js http server
-var io      = require('socket.io')(http);
-var games   = {};
+var io       = require('socket.io')(http);
+var games    = {};
+var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
 io.on('connection', function(socket){
@@ -33,18 +34,28 @@ io.on('connection', function(socket){
     // Add to list of games
     io.emit("addToListOfGames", games[socketId]);
     // Join new room for that game
-    var gameRoom = "game_"+socketId;
+    gameRoom = "game_"+socketId;
     socket.join(gameRoom);
   });
 
   socket.on("joinedGame", function(gameId, socketId) {
     var game = games[gameId];
-    game.players.push(socketId)
-    console.log(socketId, " just joined the game ", games[gameId]);
+    gameRoom = "game_"+gameId;
+    game.players.push(socketId);
     // Send to all members of that game updating that a new player has joined
-    var gameRoom = "game_"+gameId;
     socket.join(gameRoom);
-    games[gameId]['grid'] = [2,4,5,7,8,3,5,6,8,0,2,3,4];
-    io.to(gameRoom).emit('start', games[gameId]);
+    console.log(socketId, " just joined the game ", game);
+    // Setup main-grid on server side to be pushed to both players on the client side
+    var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+    game['main-grid'] = [];
+
+    for (var i = 0; i < 9; i++) {
+      var shape = shapes[Math.floor(Math.random()*shapes.length)];
+      var shapeIndex = shapes.indexOf(shape);
+      game['main-grid'].push(shape);
+      shapes.splice(shapeIndex, 1);
+    }
+    // Send information about the game to the gameRoom on the client side
+    io.to(gameRoom).emit('start', game);
   })
 });
