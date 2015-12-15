@@ -11,23 +11,21 @@
   <link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 <body>
+  <header>
+    <ul>
+      <li><h1>SHAPES</h1></li>
+      <li id='player-score'>Score: 0</li>
+      <li class='timer'>Time: </li>
+    </ul>
+  </header>
 
-<header>
-  <ul>
-    <li><h1>SHAPES</h1></li>
-    <li id='player-score'>Score: 0</li>
-    <li class='timer'>Time: </li>
-  </ul>
-</header>
-
-<main>
-
-  <section  class="new-game-tools show">
-    <form id='join-game'>
-      <label for='name'>Player Name:</label>
-      <input type='text' name='name' placeholder='Enter your name'>
-      <input type='submit' value='Play Game'>
-    </form>
+  <main>
+    <section  class="new-game-tools show">
+      <form id='join-game'>
+        <label for='name'>Player Name:</label>
+        <input type='text' name='name' placeholder='Enter your name'>
+        <input type='submit' value='Play Game'>
+      </form>
     <!-- <ul>
       <li><button type="submit" id='create-game'>Create game</button></li>
       <li><button type="submit" id='join-game'>Play Game</button></li>
@@ -41,6 +39,9 @@
     <h2>Player Shape:</h2>
     <li class='player-gridsquare' id='player-gridsquare-5'></li>
   </ul>
+
+  <div class="message"></div>
+  <ul class="game-list"></ul>
 
   <section class="main-game-grid">
     <ul class='game-grid'>
