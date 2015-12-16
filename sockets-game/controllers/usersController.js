@@ -35,7 +35,11 @@ function usersUpdate(req, res) {
 }
 
 function usersDelete(req, res) {
-
+  var id = req.params.id;
+  User.findOneAndRemove({_id: id}, function(err){
+    if (err) return res.status(500).json({ message: 'Something went wrong.' });
+    return res.status(200).json({ message: 'User succesfully deleted' });
+  });
 }
 
 module.exports = {
