@@ -18,6 +18,7 @@ function SocketsController() {
 
   function init(){
     console.log('initialising');
+    self.squares   = new Array(9);
     $("form").on("submit", start);
     $(".game-list").on("click", ".join-game", join);
   };
@@ -151,5 +152,5 @@ function SocketsController() {
     }
   })
 
-return init();
+return self.init();
 }
