@@ -55,7 +55,24 @@ function scoresUpdate(req, res) {
 }
 
 function scoresDelete(req, res) {
-  
+  var userId = req.body.user_id;
+  var id     = req.params.id;
+
+  User.findOne({_id: userId}, function(err, user){
+    if (err) return res.status(500).json({ message: 'Something went wrong.' });
+
+    var scoreId = user.scores.indexOf(id);
+    user.scores.splice(scoreId, 1);
+
+    Score.findOneAndRemove({_id: id}, function(err){
+      if (err) return res.status(500).json({ message: 'Something went wrong.' });
+
+      user.save(function(err, user){
+        if (err) return res.status(500).json({ message: 'Something went wrong.' });
+        return res.status(201).json({ message: 'Score succesfully deleted'});  
+      });
+    });
+  });
 }
 
 module.exports = {
