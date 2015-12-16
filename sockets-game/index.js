@@ -5,6 +5,7 @@ var methodOverride = require('method-override');
 var morgan         = require('morgan');
 var bodyParser     = require('body-parser');
 var cookieParser   = require('cookie-parser');
+var cors           = require('cors');
 var passport       = require('passport');
 var jwt            = require('jsonwebtoken');
 var expressJWT     = require('express-jwt');
