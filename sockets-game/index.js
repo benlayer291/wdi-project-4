@@ -54,7 +54,7 @@ app.use(function (err, req, res, next) {
 
 //Routes
 var routes = require('./config/routes');
-app.use("/api", routes);
+app.use(routes);
 
 // Serve front-end html, js, css from the 'public' directory
 app.use(express.static(__dirname + '/front-end/public'));
