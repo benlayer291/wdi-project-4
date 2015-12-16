@@ -40,7 +40,18 @@ function scoresCreate(req, res) {
 }
 
 function scoresUpdate(req, res) {
-  
+  var id = req.params.id;
+  Score.findOneAndUpdate({_id: id}, req.body, function(err, score){
+    if (err) return res.status(500).json({ message: 'Something went wrong.' });
+    if (!score) return res.status(404).json({ message: 'Score could not be found'});
+
+    if (req.body.value) score.value = parseInt(score.value) + parseInt(req.body.value);
+
+    score.save(function(err){
+      if (err) return res.status(500).json({ message: 'Something went wrong.' });
+      return res.status(201).json({ message: 'Score succesfully updated'});
+    });
+  });
 }
 
 function scoresDelete(req, res) {
