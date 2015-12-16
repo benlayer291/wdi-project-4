@@ -1,3 +1,10 @@
-<section>
+<section ng-controller="UsersController as users">
   <h1>PROFILE</h1>
+  <h2>{{ users.user.local.firstname | uppercase}} {{users.user.local.lastname | uppercase}}</h2>
+  <h3>SCORES</h3>
+  <ul>
+    <li ng-repeat="score in users.user.scores">
+      {{ score.value }}
+    </li>
+  </ul>
 </section>
