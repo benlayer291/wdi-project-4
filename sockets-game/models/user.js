@@ -9,7 +9,7 @@ var userSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     password: { type: String, required: true }
   },
-  scores: [Score.schema]
+  scores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Score'}]
 })
 
 userSchema.statics.encrypt = function(password) {

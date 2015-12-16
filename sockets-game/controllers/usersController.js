@@ -9,7 +9,7 @@ function usersIndex(req, res) {
 
 function usersShow(req, res) {
   var id = req.params.id;
-  User.findOne({_id: id}, function(err, user){
+  User.findOne({_id: id}).populate('scores').exec(function(err, user){
     if (err) return res.status(500).json({ message: 'Something went wrong.' });
     if (!user) return res.status(404).json({ message: 'User could not be found'});
     return res.status(200).json({ user: user });

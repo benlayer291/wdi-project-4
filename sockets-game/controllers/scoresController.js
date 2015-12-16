@@ -32,7 +32,7 @@ function scoresCreate(req, res) {
 
       user.save(function(err, user){
         if (err) return res.status(500).json({ message: 'Something went wrong.' });
-        return res.status(201).json({ message: 'Score succesfully created and added to user', score: score });  
+        return res.status(201).json({ message: 'Score succesfully created and added to user', user: user });  
       });
     });
   });

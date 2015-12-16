@@ -1,5 +1,6 @@
-var User = require('../models/user');
-var Game = require('../models/game');
+var Game  = require('../models/game');
+var User  = require('../models/user');
+var Score = require('../models/score');
 
 function gamesIndex(req,res) {
   Game.find({}, function(err, games){
@@ -18,57 +19,44 @@ function gamesShow(req,res) {
 }
 
 function gamesCreateAndJoin(req,res) {
-  var user_id = req.body.user_id;
-  var game_id = req.body.game_id;
-  var newGame = new Game(req.body);
+  var user_id   = req.body.user_id;
+  var socket_id = req.body.socket_id;
+  var game_id   = req.body.game_id;
+  var newGame   = new Game(req.body);
 
   if (game_id) {
     Game.findOne({_id: game_id}, function(err, game){
-      if (err) return res.status(500).json({ message: 'Something went wrong.', err });
-      if (!game) return res.status(404).json({ message: 'Game could not be found'});
+      if (err) return res.status(500).json({ message: 'Something went wrong.' });
 
-      game.players.push(user_id);
-
-      game.save(function(err, game){
+      User.findOne({_id: user_id}, function(err, user){
         if (err) return res.status(500).json({ message: 'Something went wrong.' });
-        return res.status(201).json({ message: 'Game found', game: game });  
-      });
-    })
-  } else {
+        if (!user) return res.status(404).json({ message: 'User could not be found'});
 
-    newGame.save(function(err, newGame){
-      if (err) return res.status(500).json({ message: 'Something went wrong.', err });
-
-      Game.findOne({_id: newGame.id}, function(err, game){
-        if (err) return res.status(500).json({ message: 'Something went wrong.', err });
-        if (!game) return res.status(404).json({ message: 'Game could not be found'});
-
-        game.players.push(user_id);
+        game.players.push(user);
 
         game.save(function(err, game){
           if (err) return res.status(500).json({ message: 'Something went wrong.' });
-          return res.status(201).json({ message: 'Game succesfully created by user', game: game });  
+          return res.status(201).json({ message: 'Game succesfully joined and user added', game: game });  
         });
-      })
+      });
+    });
+  } else {
+    newGame.save(function(err, game){
+      if (err) return res.status(500).json({ message: 'Something went wrong.' });
+
+      User.findOne({_id: user_id}, function(err, user){
+        if (err) return res.status(500).json({ message: 'Something went wrong.' });
+        if (!user) return res.status(404).json({ message: 'User could not be found'});
+
+        game.players.push(user);
+
+        game.save(function(err){
+          if (err) return res.status(500).json({ message: 'Something went wrong.' });
+          return res.status(201).json({ message: 'Game succesfully created and user added', game: game });  
+        });
+      });
     });
   }
-}
-
-function gamesJoin(req, res) {
-  var game_id = req.body.game_id;
-  var user_id = req.body.user_id
-
-  Game.findOne({_id: game_id}, function(err, game){
-    if (err) return res.status(500).json({ message: 'Something went wrong.', err });
-    if (!game) return res.status(404).json({ message: 'Game could not be found'});
-
-    // game.players.push(user_id);
-
-    // game.save(function(err, game){
-    //   if (err) return res.status(500).json({ message: 'Something went wrong.' });
-      return res.status(201).json({ message: 'Game found', game: game });  
-    });
-  // })
 }
 
 function gamesUpdate(req,res) {
@@ -77,7 +65,7 @@ function gamesUpdate(req,res) {
     if (err) return res.status(500).json({ message: 'Something went wrong.' });
     if (!game) return res.status(404).json({ message: 'Game could not be found'});
 
-    if (req.body.game_id) game.game_id = req.body.game_id;
+    if (req.body.socket_id) game.socket_id = req.body.socket_id;
 
     game.save(function(err){
       if (err) return res.status(500).json({ message: 'Something went wrong.' });
