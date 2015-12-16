@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="shapes">
 <head>
   <title>WDI-Project-4</title>
   <!-- scripts -->
@@ -13,16 +13,34 @@
   <link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 <body>
-  <header>
-    <ul>
-      <li><h1>SHAPES</h1></li>
-      <li class='timer'></li>
-    </ul>
-    <ul class='score'></ul>
-    <ul class='notifications'></ul>
+
+  <header ng-controller="UsersController as users">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a ui-sref-active="active" ui-sref="home" class="navbar-brand" href="#">SHAPES</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a ng-hide="users.user" href="#" ui-sref-active="active" ui-sref="login">Login</a></li>
+            <li><a ng-hide="users.user" href="#" ui-sref-active="active" ui-sref="register">Register</a></li>
+            <li><a ng-show="users.user" href="#" ui-sref-active="active" ui-sref="home" ng-click="users.logout()">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <main>
+    <section>
+      <ul>
+        <li><h1>SHAPES</h1></li>
+        <li class='timer'></li>
+      </ul>
+      <ul class='score'></ul>
+      <ul class='notifications'></ul>
+    </section>
+
     <section  class="new-game-tools">
       <form id='join-game'>
         <label for='name'>Player Name:</label>
@@ -54,5 +72,6 @@
   </section>
 
 </main>
+
 </body>
 </html>
