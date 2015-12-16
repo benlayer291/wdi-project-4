@@ -1,3 +1,5 @@
+angular
+  .module('shapes', ['ngResource', 'angular-jwt', 'ui.router'])
 // // sending to sender-client only
 // socket.emit('message', "this is a test");
 

@@ -54,7 +54,7 @@ app.use(function (err, req, res, next) {
 
 //Routes
 var routes = require('./config/routes');
-app.use(routes);
+app.use("/api", routes);
 
 // Serve front-end html, js, css from the 'public' directory
 app.use(express.static(__dirname + '/front-end/public'));
@@ -74,6 +74,7 @@ var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
 io.on('connection', function(socket){
+  console.log("CONNECTED");
   socket.on("newGame", function(socketId){
     console.log("Game started with id: ", socketId);
     // If new game, create new game in database? The object below is like model in database
