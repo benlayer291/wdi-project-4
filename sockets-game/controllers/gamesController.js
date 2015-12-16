@@ -17,13 +17,58 @@ function gamesShow(req,res) {
   });
 }
 
-function gamesCreate(req,res) {
+function gamesCreateAndJoin(req,res) {
+  var user_id = req.body.user_id;
+  var game_id = req.body.game_id;
   var newGame = new Game(req.body);
 
-  newGame.save(function(err, game){
-    if (err) return res.status(500).json({ message: 'Something went wrong.' });
-    return res.status(201).json({ message: 'Game succesfully created', game: game })
-  });
+  if (game_id) {
+    Game.findOne({_id: game_id}, function(err, game){
+      if (err) return res.status(500).json({ message: 'Something went wrong.', err });
+      if (!game) return res.status(404).json({ message: 'Game could not be found'});
+
+      game.players.push(user_id);
+
+      game.save(function(err, game){
+        if (err) return res.status(500).json({ message: 'Something went wrong.' });
+        return res.status(201).json({ message: 'Game found', game: game });  
+      });
+    })
+  } else {
+
+    newGame.save(function(err, newGame){
+      if (err) return res.status(500).json({ message: 'Something went wrong.', err });
+
+      Game.findOne({_id: newGame.id}, function(err, game){
+        if (err) return res.status(500).json({ message: 'Something went wrong.', err });
+        if (!game) return res.status(404).json({ message: 'Game could not be found'});
+
+        game.players.push(user_id);
+
+        game.save(function(err, game){
+          if (err) return res.status(500).json({ message: 'Something went wrong.' });
+          return res.status(201).json({ message: 'Game succesfully created by user', game: game });  
+        });
+      })
+    });
+  }
+}
+
+function gamesJoin(req, res) {
+  var game_id = req.body.game_id;
+  var user_id = req.body.user_id
+
+  Game.findOne({_id: game_id}, function(err, game){
+    if (err) return res.status(500).json({ message: 'Something went wrong.', err });
+    if (!game) return res.status(404).json({ message: 'Game could not be found'});
+
+    // game.players.push(user_id);
+
+    // game.save(function(err, game){
+    //   if (err) return res.status(500).json({ message: 'Something went wrong.' });
+      return res.status(201).json({ message: 'Game found', game: game });  
+    });
+  // })
 }
 
 function gamesUpdate(req,res) {
@@ -51,9 +96,9 @@ function gamesDelete(req,res) {
 }
 
 module.exports = {
-  gamesIndex:  gamesIndex,
-  gamesShow:   gamesShow,
-  gamesCreate: gamesCreate,
-  gamesUpdate: gamesUpdate,
-  gamesDelete: gamesDelete,
+  gamesIndex:         gamesIndex,
+  gamesShow:          gamesShow,
+  gamesCreateAndJoin: gamesCreateAndJoin,
+  gamesUpdate:        gamesUpdate,
+  gamesDelete:        gamesDelete,
 }

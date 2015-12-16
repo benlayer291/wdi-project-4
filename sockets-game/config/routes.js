@@ -23,7 +23,7 @@ router.route('/users/:id')
 //Games routes
 router.route('/games')
   .get(gamesController.gamesIndex)
-  .post(gamesController.gamesCreate)
+  .post(gamesController.gamesCreateAndJoin)
 
 router.route('/games/:id')
   .get(gamesController.gamesShow)
