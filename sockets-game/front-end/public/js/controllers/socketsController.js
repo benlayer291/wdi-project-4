@@ -4,7 +4,9 @@ angular
 
 function SocketsController() {
 
-  var self = this;
+  var self   = this;
+  var socket = io.connect();
+  var gameChannel;
 
   self.init      = init;
   self.start     = start;
@@ -13,6 +15,12 @@ function SocketsController() {
   self.playGame  = playGame;
   self.gameTimer = gameTimer;
   self.setUpPlayerShape = setUpPlayerShape;
+
+  function init(){
+    console.log('initialising');
+    $("form").on("submit", start);
+    $(".game-list").on("click", ".join-game", join);
+  };
 
   function start(){
     event.preventDefault();
@@ -70,5 +78,78 @@ function SocketsController() {
     return gameTime;
   }
 
+  //SOCKET LISTENING EVENTS
+  socket.on('connect', function(){
+    console.log('connected', socket.io.engine.id);
+  });
 
+  socket.on('addToListOfGames', function(game){
+    console.log("Game data received from socket.on:addToListOfGames ", game);
+
+    if (socket.io.engine.id === game.id) {
+      return inGame(game.id)
+    } else {
+      return $(".game-list").append("<li>"+game.id+"<span>Players: "+game.players.length+"</span><a href='#' data-gameid='"+game.id+"' class='join-game'>Join</a></li>");
+    }
+  })
+
+  socket.on('start', function(game){
+    var countdownTime = 5;
+
+    // Countdown Timer
+    $('.notifications').append('<li>Get Ready!</li>');
+    $('.timer').html('Time: ' + countdownTime);
+    var countdownRemaining = setInterval(function(){
+      if(countdownTime > 0) {
+        countdownTime--;
+      } else {
+        $('.notifications')
+          .empty()
+          .append('<li>Go!</li>');
+        clearInterval(countdownRemaining);
+        gameTimer();
+      }
+      $('.timer').html('Time: ' + countdownTime);
+    }, 1000);
+
+    // Setup main-grid when timer finishes- same for both players, comes from server side
+    for (var i = 0; i < game['main-grid'].length; i++) {
+      $('#'+i)
+        .html(game['main-grid'][i])
+        .attr('data-gameid', game.id);
+    }
+
+    // Setup scores with player socket ids
+    for (var i = 0; i < game.players.length; i++) {
+      $('.score').append('<li id=score-'+game.players[i].id+'>Score:'+game.players[i].score+'</li>')
+    }
+
+    return setUpPlayerShape(game);
+  });
+
+  socket.on('correctChoice', function(game, socketId){
+
+    // Update the main grid
+    for (var i = 0; i < game['main-grid'].length; i++) {
+      $('#'+i)
+      .html(game['main-grid'][i])
+      .attr('data-gameid', game.id);
+    }
+
+    // Player gets a new shape
+    if (socketId === socket.io.engine.id) {
+      var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
+      console.log(playerShape);
+      $('#player-selected-gridsquare').html(playerShape);
+    }
+
+    // Player gets a point
+    console.log("SCORES: ", game.players);
+    for (var i = 0; i < game.players.length; i++) {
+      console.log(game.players[i]);
+      $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);
+    }
+  })
+
+return init();
 }
