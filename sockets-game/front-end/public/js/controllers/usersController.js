@@ -2,8 +2,8 @@ angular
   .module('shapes')
   .controller('UsersController', UsersController);
 
-UsersController.$inject = ['User', 'TokenService', 'CurrentUser'];
-function UsersController(User, TokenService, CurrentUser) {
+UsersController.$inject = ['User', 'TokenService', 'CurrentUser', '$state'];
+function UsersController(User, TokenService, CurrentUser, $state) {
 
   var self = this;
 
@@ -36,7 +36,8 @@ function UsersController(User, TokenService, CurrentUser) {
     var token = res.token ? res.token : null;
     if (token) {
       // self.getUsers();
-      // $state.go('home');
+      console.log("Logging In");
+      $state.go('home');
     }
     // console.log(res);
     // self.user = TokenService.decodeToken();
