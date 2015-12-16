@@ -3,7 +3,7 @@ angular
   .controller('UsersController', UsersController);
 
 UsersController.$inject = ['User', 'TokenService', 'CurrentUser'];
-function UsersController(User, TokenService) {
+function UsersController(User, TokenService, CurrentUser) {
 
   var self = this;
 
@@ -51,7 +51,7 @@ function UsersController(User, TokenService) {
 
   // Every time page is loaded, check if the user is logged in
   if (CurrentUser.getUser()) {
-    self.getUsers();
+    // self.getUsers();
     // self.user = TokenService.decodeToken();
     // console.log(self.user);
   }

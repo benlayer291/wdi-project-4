@@ -3,7 +3,7 @@ angular
   .constant('API', 'http://localhost:3000/api')
   .config(MainRouter)
   .config(function($httpProvider){
-    $httpProvider.interceptors.push('authInterceptor')
+    $httpProvider.interceptors.push('AuthInterceptor')
   })
 
   MainRouter.$inject = ['$stateProvider', '$urlRouterProvider'];
