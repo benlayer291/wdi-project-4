@@ -9,20 +9,18 @@ function SocketsController() {
   var gameChannel;
 
   self.squares   = new Array(9);
-  // self.init      = init;
+  self.init      = init;
   self.start     = start;
   self.join      = join;
   self.inGame    = inGame;
   self.playGame  = playGame;
   self.gameTimer = gameTimer;
   self.setUpPlayerShape = setUpPlayerShape;
-  self.gameid;
 
-  // function init(){
-  //   console.log('initialising');
-  //   $("form").on("submit", start);
-  //   $(".game-list").on("click", ".join-game", join);
-  // };
+  function init(){
+    console.log('initialising');
+    $(".game-list").on("click", ".join-game", join);
+  };
 
   function start(){
     event.preventDefault();
@@ -37,10 +35,9 @@ function SocketsController() {
   }
 
   function inGame(gameid){
-    self.gameid = gameid;
-    // $(".game-list").hide();
-    // $(".new-game-tools").hide();
-    // $(".message").html("<h2>You are playing in game: "+gameid+"</h2>")
+    $(".game-list").hide();
+    $(".new-game-tools").hide();
+    $(".message").html("<h2>You are playing in game: "+gameid+"</h2>")
     return self.gameid;
   }
 
@@ -155,5 +152,5 @@ function SocketsController() {
     }
   })
 
-return self;
+return self.init();
 }
