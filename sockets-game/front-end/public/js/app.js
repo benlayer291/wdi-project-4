@@ -1,7 +1,9 @@
 angular
   .module('shapes', ['ngResource', 'angular-jwt', 'ui.router'])
   .constant('API', 'http://localhost:3000/api')
-  
+  .config(function($httpProvider){
+    $httpProvider.interceptors.push('authInterceptor')
+  })
 // // sending to sender-client only
 // socket.emit('message', "this is a test");
 
