@@ -2,6 +2,8 @@
 <html ng-app="shapes">
 <head>
   <title>WDI-Project-4</title>
+  <!-- meta-tags -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- scripts -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.2/angular.min.js"></script>
@@ -31,7 +33,6 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a ng-show="users.checkLoggedIn()" href="#" ui-sref-active="active" ui-sref="game">PLAY</a></li>
             <li><a ng-show="users.checkLoggedIn()" href="#" ui-sref-active="active" ui-sref="profile">PROFILE</a></li>
             <li><a ng-hide="users.checkLoggedIn()" href="#" ui-sref-active="active" ui-sref="login">LOGIN</a></li>
             <li><a ng-hide="users.checkLoggedIn()" href="#" ui-sref-active="active" ui-sref="register">REGISTER</a></li>
