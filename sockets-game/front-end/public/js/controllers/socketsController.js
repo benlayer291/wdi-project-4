@@ -2,8 +2,8 @@ angular
   .module('shapes')
   .controller('SocketsController', SocketsController)
 
-SocketsController.$inject = ['TokenService', 'CurrentUser']
-function SocketsController(TokenService, CurrentUser) {
+SocketsController.$inject = ['Game', 'Score', 'TokenService', 'CurrentUser']
+function SocketsController(Game, Score, TokenService, CurrentUser) {
 
   var self   = this;
   var socket = io.connect();
@@ -11,8 +11,9 @@ function SocketsController(TokenService, CurrentUser) {
   var gameId;
   var gameChannel;
 
-  self.creatingPlayer   = {}
-  self.joiningPlayer    = {}
+  self.creatingPlayer   = {};
+  self.joiningPlayer    = {};
+  self.finalScores      = [];
 
   self.squares   = new Array(9);
   self.init      = init;
@@ -71,9 +72,8 @@ function SocketsController(TokenService, CurrentUser) {
     return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
   }
 
-
-  function gameTimer() {
-    var gameTime = 30;
+  function gameTimer(game) {
+    var gameTime = 5;
     
     $('.timer').html('Time: ' + gameTime);
     setTimeout(function(){ $('.notifications').empty() }, 1000)
@@ -84,11 +84,24 @@ function SocketsController(TokenService, CurrentUser) {
         $('.notifications').append('<li>Game Over!</li>');
         $('.game-gridsquare').off('click');
         clearInterval(timeRemaining);
-        // endGame(game);
+        endGame(game);
       }
       $('.timer').html('Time: ' + gameTime);
     }, 1000);
     return timeRemaining;
+  }
+
+  function endGame(game) {
+    var endGame;
+    Game.get({id:game._id}, function(data){
+      endGame = data
+    })
+
+    setTimeout(function(){
+      console.log(endGame);
+    }, 100)
+
+
   }
 
   //SOCKET LISTENING EVENTS
@@ -121,7 +134,7 @@ function SocketsController(TokenService, CurrentUser) {
           .empty()
           .append('<li>Go!</li>');
         clearInterval(countdownRemaining);
-        gameTimer();
+        gameTimer(game);
       }
       $('.timer').html('Time: ' + countdownTime);
     }, 1000);

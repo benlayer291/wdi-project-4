@@ -171,9 +171,4 @@ io.on('connection', function(socket){
     });
   });
 
-socket.on("endGame", function(game){
-  console.log("Game that is ending", games[game.id]);
-  io.to(gameRoom).emit('checkWinner');
-})
-
 });
