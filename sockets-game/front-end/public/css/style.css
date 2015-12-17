@@ -59,7 +59,7 @@ header ul li {
 
 /*login.html styling */
 #login {
-  height: 200px;
+  height: 300px;
   position: absolute;
   top:0;
   bottom: 0;
@@ -68,6 +68,36 @@ header ul li {
   margin: auto;
 }
 
+#login h1 {
+  color: #00C853;
+  font-size: 56px;
+}
+
+#login label {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+#login input {
+  border-color: #FAFAFA;
+}
+
+#login input:focus {
+  border-color:#00C853;
+}
+
+#login button {
+  border: none;
+  background: #FAFAFA;
+  font-size: 18px;
+  font-weight: 500;
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#login button:hover {
+  color: #00C853;
+}
 /*Grid styling*/
 
 .player-grid {
