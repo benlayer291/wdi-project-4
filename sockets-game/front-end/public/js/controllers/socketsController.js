@@ -55,21 +55,20 @@ function SocketsController(TokenService, CurrentUser) {
   }
 
   function setUpPlayerShape(game) {
-    // Setup player-grid, different for each player- comes from client side
-    console.log(game);
     var socketId    = socket.io.engine.id;
     var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
 
-    console.log(playerShape);
     return $('#player-selected-gridsquare').html(playerShape);
   }
 
   function playGame(){
     var gameId        = $(this).data('gameid');
     var socketId      = socket.io.engine.id;
+    var player        = CurrentUser.user;
     var playerShape   = $('#player-selected-gridsquare').html();
     var squareClicked = $(this).html();
-    socket.emit('playingGame', gameId, socketId, playerShape, squareClicked);
+
+    return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
   }
 
 
@@ -89,8 +88,7 @@ function SocketsController(TokenService, CurrentUser) {
       }
       $('.timer').html('Time: ' + gameTime);
     }, 1000);
-    $('.game-gridsquare').on('click', playGame);
-    return gameTime;
+    return $('.game-gridsquare').on('click', playGame);
   }
 
   //SOCKET LISTENING EVENTS
@@ -146,21 +144,20 @@ function SocketsController(TokenService, CurrentUser) {
   socket.on('correctChoice', function(game, socketId){
 
     // Update the main grid
-    for (var i = 0; i < game['main-grid'].length; i++) {
+    for (var i = 0; i < game.grid.length; i++) {
       $('#'+i)
-      .html(game['main-grid'][i])
-      .attr('data-gameid', game.id);
+      .html(game.grid[i])
+      .attr('data-gameid', game.socket_id);
     }
 
     // Player gets a new shape
     if (socketId === socket.io.engine.id) {
-      var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
+      var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
       console.log(playerShape);
       $('#player-selected-gridsquare').html(playerShape);
     }
 
     // Player gets a point
-    console.log("SCORES: ", game.players);
     for (var i = 0; i < game.players.length; i++) {
       console.log(game.players[i]);
       $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);

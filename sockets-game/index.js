@@ -77,13 +77,12 @@ var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
 io.on('connection', function(socket){
-  console.log("CONNECTED IS BEING TRIGGERED");
 
   socket.on("newGame", function(socketId, creatingPlayer){
-    console.log("Game started with id: ", socketId);
-    console.log("by", creatingPlayer);
+
     // If new game, create new game in database? The object below is like model in database
     var newGame   = new Game({socket_id: socketId});
+
     User.findOne({_id: creatingPlayer._id}, function(err, user){
       var newScore  = new Score();
       var newPlayer = user;
@@ -101,18 +100,6 @@ io.on('connection', function(socket){
       io.emit("addToListOfGames", newGame);
     });
    
-    // games[socketId] = {
-    //   id: socketId,
-    //   players: []
-    // }
-    // // Save player
-    // player[socketId] = {
-    //   id: socketId,
-    //   score: 0
-    // }
-    // games[socketId].players.push(player[socketId]);
-    // // Add to list of games
-    // Join new room for that game
     gameRoom = "game_"+socketId;
     socket.join(gameRoom);
   });
@@ -150,63 +137,44 @@ io.on('connection', function(socket){
 
       io.to(gameRoom).emit('start', game);
     });
-    // var game = games[gameId];
-    // Save player
-    // player[socketId] = {
-    //   id: socketId,
-      // name: req.body.name,
-    //   score: 0
-    // }
-    // game.players.push(player[socketId]);
-    // Send to all members of that game updating that a new player has joined
-    // socket.join(gameRoom);
-    // console.log(joiningPlayer, " just joined the game ", game);
+  });
 
-    // Setup main-grid on server side to be pushed to both players on the client side
-    // var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
-    // game['main-grid'] = [];
-
-    // for (var i = 0; i < 9; i++) {
-    //   var shape = shapes[Math.floor(Math.random()*shapes.length)];
-    //   var shapeIndex = shapes.indexOf(shape);
-    //   game['main-grid'].push(shape);
-    //   shapes.splice(shapeIndex, 1);
-    // }
-    // Send information about the game to the gameRoom on the client side
-    // gameRoom = "game_"+gameId;
-    // io.to(gameRoom).emit('start', game);
-  })
-
-  // socket.on("playerGridSquare", function(socketId, playerShape) {
-  //   console.log(socketId, "'s loaded shape is: ", playerShape);
-  // })
-
-socket.on("playingGame", function(gameId, socketId, playerShape, squareClicked){
+socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
     // console.log (socketId, " just clicked ", squareClicked, ' in this game: ', gameId);
+    console.log("PLAYER WHO CLICKED WAS:", player);
+    // var game        = games[gameId];
+    // var gameGrid    = game['main-grid'];
+    Game.findOne({socket_id: gameId}, function(err, game){
+      if (err) throw err;
 
-    var game        = games[gameId];
-    var gameGrid    = game['main-grid'];
+      //correct choice
+      if (playerShape === squareClicked) {
+        console.log(player.firstname, ' got the grid choice correct!')
+        var squareClickedIndex = game.grid.indexOf(squareClicked);
+        var squareToSwapIndex  = Math.floor(Math.random()*game.grid.length);
 
-    //correct choice
-    if (playerShape === squareClicked) {
-      console.log(socketId, ' got the grid choice correct!')
-      var squareClickedIndex = gameGrid.indexOf(squareClicked);
-      var squareToSwapIndex  = Math.floor(Math.random()*gameGrid.length);
-      // change the grid
-      gameGrid[squareClickedIndex] = gameGrid[squareToSwapIndex];
-      gameGrid[squareToSwapIndex]  = squareClicked;
-      // change the score
-      for (var i = 0; i < game.players.length; i++) {
-        if (game.players[i].id === socketId) {
-          game.players[i].score++;
+        // change the grid
+        game.grid[squareClickedIndex] = game.grid[squareToSwapIndex];
+        game.grid[squareToSwapIndex]  = squareClicked;
+
+        // change the score
+        for (var i = 0; i < game.players.length; i++) {
+          console.log("CHECKING PLAYER:", game.players[i])
+          if (game.players[i] == player._id) {
+            Score.findOne({_id: game.scores[i]}, function(err, score){
+              if (err) throw err;
+              score.value++;
+              score.save();
+            })
+          }
         }
-      }
-      //send to front-end
-      console.log('PLAYERS SCORES:', game.players);
-      io.to(gameRoom).emit('correctChoice', game, socketId);
-    } else {
-      io.to(gameRoom).emit('incorrectChoice', game, socketId);
-    }
+        //send to front-end
+        io.to(gameRoom).emit('correctChoice', game, socketId);
+      } 
+      // else {
+      //   io.to(gameRoom).emit('incorrectChoice', game, socketId);
+      // }
+    })
   })
 
 socket.on("endGame", function(game){
