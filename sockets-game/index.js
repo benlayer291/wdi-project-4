@@ -121,35 +121,31 @@ io.on('connection', function(socket){
         game.scores.push(newScore);
         game.save();
 
+        socket.join(gameRoom);
+
+        //CREATE GRID
+        var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+        game.grid = [];
+        for (var i = 0; i < 9; i++) {
+          var shape = shapes[Math.floor(Math.random()*shapes.length)];
+          var shapeIndex = shapes.indexOf(shape);
+          game.grid.push(shape);
+          shapes.splice(shapeIndex, 1);
+        }
+
+        io.to(gameRoom).emit('start', game);
       });
-      socket.join(gameRoom);
-      console.log(joiningPlayer, " just joined the game ", game);
-
-      var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
-      game.grid = [];
-
-      for (var i = 0; i < 9; i++) {
-        var shape = shapes[Math.floor(Math.random()*shapes.length)];
-        var shapeIndex = shapes.indexOf(shape);
-        game.grid.push(shape);
-        shapes.splice(shapeIndex, 1);
-      }
-
-      io.to(gameRoom).emit('start', game);
     });
   });
 
 socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
-    // console.log (socketId, " just clicked ", squareClicked, ' in this game: ', gameId);
-    console.log("PLAYER WHO CLICKED WAS:", player);
-    // var game        = games[gameId];
-    // var gameGrid    = game['main-grid'];
+
     Game.findOne({socket_id: gameId}, function(err, game){
       if (err) throw err;
 
       //correct choice
       if (playerShape === squareClicked) {
-        console.log(player.firstname, ' got the grid choice correct!')
+        console.log(player.local.firstname, ' got the grid choice correct!')
         var squareClickedIndex = game.grid.indexOf(squareClicked);
         var squareToSwapIndex  = Math.floor(Math.random()*game.grid.length);
 
@@ -165,11 +161,12 @@ socket.on("playingGame", function(gameId, socketId, player, playerShape, squareC
               if (err) throw err;
               score.value++;
               score.save();
+
+              //send to front-end
+              return io.to(gameRoom).emit('correctChoice', game, socketId, score);
             })
           }
         }
-        //send to front-end
-        io.to(gameRoom).emit('correctChoice', game, socketId);
       } 
       // else {
       //   io.to(gameRoom).emit('incorrectChoice', game, socketId);

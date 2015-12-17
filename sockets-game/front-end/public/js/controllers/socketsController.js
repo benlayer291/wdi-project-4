@@ -109,7 +109,7 @@ function SocketsController(TokenService, CurrentUser) {
 
   socket.on('start', function(game){
     var countdownTime = 5;
-
+    console.log("START GAME INFO:", game);
     // Countdown Timer
     $('.notifications').append('<li>Get Ready!</li>');
     $('.timer').html('Time: ' + countdownTime);
@@ -135,13 +135,13 @@ function SocketsController(TokenService, CurrentUser) {
 
     // Setup scores with player socket ids
     for (var i = 0; i < game.players.length; i++) {
-      $('.score').append('<li id=score-'+game.players[i].id+'>Score:'+game.players[i].score+'</li>')
+      $('.score').append('<li id=score-'+game.players[i]+'>Score: 0</li>');
     }
 
     return setUpPlayerShape(game);
   });
 
-  socket.on('correctChoice', function(game, socketId){
+  socket.on('correctChoice', function(game, socketId, score){
 
     // Update the main grid
     for (var i = 0; i < game.grid.length; i++) {
@@ -153,15 +153,16 @@ function SocketsController(TokenService, CurrentUser) {
     // Player gets a new shape
     if (socketId === socket.io.engine.id) {
       var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
-      console.log(playerShape);
       $('#player-selected-gridsquare').html(playerShape);
     }
 
     // Player gets a point
-    for (var i = 0; i < game.players.length; i++) {
-      console.log(game.players[i]);
-      $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);
-    }
+    console.log("SCORE THAT HAS CHANGED:", score);
+    $('#score-'+score.player).html('Score: ' + score.value);
+    // for (var i = 0; i < game.players.length; i++) {
+    //   console.log(game.players[i]);
+    //   $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);
+    // }
   })
 
 return self.init();
