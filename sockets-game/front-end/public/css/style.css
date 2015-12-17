@@ -74,7 +74,7 @@ header ul li {
 }
 
 #login label {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
 
@@ -98,6 +98,49 @@ header ul li {
 #login button:hover {
   color: #00C853;
 }
+
+/*register.html styling */
+#register {
+  height: 450px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+#register h1 {
+  color: #00C853;
+  font-size: 56px;
+}
+
+#register label {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+#register input {
+  border-color: #FAFAFA;
+}
+
+#register input:focus {
+  border-color:#00C853;
+}
+
+#register button {
+  border: none;
+  background: #FAFAFA;
+  font-size: 18px;
+  font-weight: 500;
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#register button:hover {
+  color: #00C853;
+}
+
 /*Grid styling*/
 
 .player-grid {
