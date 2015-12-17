@@ -47,7 +47,7 @@ function UsersController(User, TokenService, CurrentUser, $state) {
     var token = res.token ? res.token : null;
     if (token) {
       console.log("Logging In");
-      $state.go('game');
+      $state.go('home');
     }
     // console.log(res);
     self.user = TokenService.decodeToken();

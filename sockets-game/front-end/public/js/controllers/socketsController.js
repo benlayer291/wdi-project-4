@@ -2,11 +2,15 @@ angular
   .module('shapes')
   .controller('SocketsController', SocketsController)
 
-function SocketsController() {
+SocketsController.$inject = ['TokenService', 'CurrentUser']
+function SocketsController(TokenService, CurrentUser) {
 
   var self   = this;
   var socket = io.connect();
   var gameChannel;
+
+  self.creatingPlayer   = {}
+  self.joiningPlayer    = {}
 
   self.squares   = new Array(9);
   self.init      = init;
@@ -19,16 +23,24 @@ function SocketsController() {
 
   function init(){
     console.log('initialising');
+    CurrentUser.saveUser(TokenService.decodeToken());
+    console.log("current user is",CurrentUser.user);
     $(".game-list").on("click", ".join-game", join);
   };
 
   function start(){
     event.preventDefault();
+    self.creatingPlayer = CurrentUser.user;
+    console.log("creating player is", self.creatingPlayer);
     return socket.emit('newGame', socket.io.engine.id);
   }
 
   function join(){
     event.preventDefault();
+    CurrentUser.saveUser(TokenService.decodeToken());
+    console.log("current user is",CurrentUser.user);
+    self.joiningPlayer = CurrentUser.user;
+    console.log("joining player is", self.joiningPlayer);
     var gameId = $(this).data('gameid');
     socket.emit('joinedGame', gameId, socket.io.engine.id)
     return inGame(gameId)
