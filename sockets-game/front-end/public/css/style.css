@@ -9,6 +9,7 @@ body {
   margin: 0 auto;
   text-align: center;
   font-family: 'Dosis', sans-serif;
+  color: #424242;
   font-weight: 200;
   background-color: #FAFAFA;
 }
@@ -30,10 +31,41 @@ header ul li {
   margin: auto;
 }
 
-#logo {
+#home-logo h1 {
   color: #00C853;
-  font-size: 84px;
+  font-size: 92px;
   font-weight: 500;
+}
+
+#home-logged-out a{
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#home-logged-in a{
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#home-logged-out a:hover{
+  color: #00C853;
+  text-decoration: none;
+}
+
+#home-logged-in a:hover{
+  color: #00C853;
+  text-decoration: none;
+}
+
+/*login.html styling */
+#login {
+  height: 200px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 /*Grid styling*/

@@ -1,21 +1,23 @@
-<!-- socket script -->
-<section>
-<div id="home">
-<div class="row">
-  <div class="col-sm-12 col-md-6 col-md-offset-3">
-    <h1 id="logo">SHAPES</h1>
-  </div>
-</div>
-  <div ng-hide="users.checkLoggedIn()" class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <h2><a href="#" ui-sref="register">REGISTER</a> or <a href="#" ui-sref="login">LOGIN</a></h2>
-    </div>
-  </div>
+<div class="container-fluid" id="home">
+  <section>
 
-  <div ng-show="users.checkLoggedIn()" class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <h2><a href="#" ui-sref="game">PLAY</a></h2>
+    <div class="row" id="home-logo">
+      <div class="col-sm-12 col-md-6 col-md-offset-3">
+      <h1 class="animated zoomIn">SHAPES</h1>
+      </div>
     </div>
-  </div>
+
+    <div ng-hide="users.checkLoggedIn()" class="row" id="home-logged-out">
+      <div class="col-md-6 col-md-offset-3">
+        <h2><a href="#" ui-sref="register">REGISTER</a> or <a href="#" ui-sref="login">LOGIN</a></h2>
+      </div>
+    </div>
+
+    <div ng-show="users.checkLoggedIn()" class="row" id="home-logged-in">
+      <div class="col-md-6 col-md-offset-3">
+        <h2><a href="#" ui-sref="game">PLAY</a></h2>
+      </div>
+    </div>
+
+  </section>
 </div>
-</section>
