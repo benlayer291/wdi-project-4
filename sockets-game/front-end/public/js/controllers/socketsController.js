@@ -212,5 +212,6 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
     $('#score-'+score.player).html('Score: ' + score.value);
   })
 
-return self.init();
+  return self.init();
+
 }

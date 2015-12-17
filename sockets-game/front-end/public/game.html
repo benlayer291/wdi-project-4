@@ -1,0 +1,50 @@
+<section ng-show="users.checkLoggedIn()" ng-controller="SocketsController as sockets">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <ul>
+        <li class='timer'></li>
+      </ul>
+      <ul class='score'>
+        
+      </ul>
+      <ul class='notifications'>
+        
+      </ul>   
+    </div>
+  </div>
+
+  <div class="row new-game-tools">
+    <div class="col-md-6 col-md-offset-3">
+      <form class="form-inline" id='join-game'>
+        <input type='submit' class="btn btn-default" value='Play Game' ng-click="sockets.start()">
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <ul class='player-selected-grid'>
+        <li class='player-gridsquare' id='player-selected-gridsquare'></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="message"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <ul class="game-list"></ul>
+    </div>
+  </div>
+
+  <ul class='main-game-grid game-grid'>
+    <li class='game-gridsquare' id='{{ $index }}' ng-repeat="square in sockets.squares track by $index" ng-click="sockets.squares[$index] || sockets.playGame($index)">
+      {{square}}
+    </li>
+  </ul>
+
+</section>

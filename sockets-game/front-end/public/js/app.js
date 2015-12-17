@@ -26,6 +26,10 @@ angular
         url: "/profile",
         templateUrl: "profile.html"
       })
+      .state('game', {
+        url: "/game",
+        templateUrl: "game.html"
+      })
 
     $urlRouterProvider.otherwise("/");
   }
