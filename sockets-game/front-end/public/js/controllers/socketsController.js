@@ -37,14 +37,14 @@ function SocketsController(TokenService, CurrentUser) {
     console.log("creating player is", self.creatingPlayer);
     return socket.emit('newGame', socketId, self.creatingPlayer);
   }
-
+  // GAMEID BEING DEFINED FOR FIRST TIME NOW THAT BOTH HAVE JOINED
   function join(){
     event.preventDefault();
     socketId = socket.io.engine.id;
     gameId = $(this).data('gameid');
     self.joiningPlayer = CurrentUser.user;
     socket.emit('joinedGame', gameId, socketId, self.joiningPlayer);
-    return inGame(gameId)
+    return inGame(gameId);
   }
 
   function inGame(gameid){
@@ -56,8 +56,9 @@ function SocketsController(TokenService, CurrentUser) {
 
   function setUpPlayerShape(game) {
     // Setup player-grid, different for each player- comes from client side
+    console.log(game);
     var socketId    = socket.io.engine.id;
-    var playerShape = game['main-grid'][(Math.floor(Math.random()*game['main-grid'].length))];
+    var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
 
     console.log(playerShape);
     return $('#player-selected-gridsquare').html(playerShape);
@@ -97,13 +98,14 @@ function SocketsController(TokenService, CurrentUser) {
     console.log('connected', socket.io.engine.id);
   });
 
-  socket.on('addToListOfGames', function(game){
-    console.log("Game data received from socket.on:addToListOfGames ", game);
+  socket.on('addToListOfGames', function(newGame){
+    console.log("Game data received from socket.on:addToListOfGames ", newGame.socket_id);
 
-    if (socket.io.engine.id === game.id) {
-      return inGame(game.id)
+    if (socket.io.engine.id === newGame.socket_id) {
+      return inGame(newGame.socket_id)
     } else {
-      return $(".game-list").append("<li>"+game.id+"<span>Players: "+game.players.length+"</span><a href='#' data-gameid='"+game.id+"' class='join-game'>Join</a></li>");
+      console.log("DIFFERENT BROWSER", newGame.players);
+      return $(".game-list").append("<li>Game: "+newGame.socket_id+"<span> Players: "+newGame.players.length+"</span><a href='#' data-gameid='"+newGame.socket_id+"' class='join-game'> Join</a></li>");
     }
   })
 
@@ -127,10 +129,10 @@ function SocketsController(TokenService, CurrentUser) {
     }, 1000);
 
     // Setup main-grid when timer finishes- same for both players, comes from server side
-    for (var i = 0; i < game['main-grid'].length; i++) {
+    for (var i = 0; i < game.grid.length; i++) {
       $('#'+i)
-        .html(game['main-grid'][i])
-        .attr('data-gameid', game.id);
+        .html(game.grid[i])
+        .attr('data-gameid', game.socket_id);
     }
 
     // Setup scores with player socket ids

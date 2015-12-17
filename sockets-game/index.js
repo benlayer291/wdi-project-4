@@ -83,10 +83,9 @@ io.on('connection', function(socket){
     console.log("Game started with id: ", socketId);
     console.log("by", creatingPlayer);
     // If new game, create new game in database? The object below is like model in database
-    // var newGame = new Game({socket_id: socketId})
     var newGame   = new Game({socket_id: socketId});
-    var newScore  = new Score();
     User.findOne({_id: creatingPlayer._id}, function(err, user){
+      var newScore  = new Score();
       var newPlayer = user;
 
       newScore.player = newPlayer;
@@ -98,50 +97,84 @@ io.on('connection', function(socket){
       newGame.save();
 
       console.log("THE NEW GAME", newGame);
+
+      io.emit("addToListOfGames", newGame);
     });
    
-    games[socketId] = {
-      id: socketId,
-      players: []
-    }
-    // Save player
-    player[socketId] = {
-      id: socketId,
-      score: 0
-    }
-    games[socketId].players.push(player[socketId]);
-    // Add to list of games
-    io.emit("addToListOfGames", games[socketId]);
+    // games[socketId] = {
+    //   id: socketId,
+    //   players: []
+    // }
+    // // Save player
+    // player[socketId] = {
+    //   id: socketId,
+    //   score: 0
+    // }
+    // games[socketId].players.push(player[socketId]);
+    // // Add to list of games
     // Join new room for that game
     gameRoom = "game_"+socketId;
     socket.join(gameRoom);
   });
 
   socket.on("joinedGame", function(gameId, socketId, joiningPlayer) {
-    var game = games[gameId];
-    // Save player
-    player[socketId] = {
-      id: socketId,
-      // name: req.body.name,
-      score: 0
-    }
-    game.players.push(player[socketId]);
-    // Send to all members of that game updating that a new player has joined
-    socket.join(gameRoom);
-    console.log(joiningPlayer, " just joined the game ", game);
-    // Setup main-grid on server side to be pushed to both players on the client side
-    var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
-    game['main-grid'] = [];
-
-    for (var i = 0; i < 9; i++) {
-      var shape = shapes[Math.floor(Math.random()*shapes.length)];
-      var shapeIndex = shapes.indexOf(shape);
-      game['main-grid'].push(shape);
-      shapes.splice(shapeIndex, 1);
-    }
-    // Send information about the game to the gameRoom on the client side
     gameRoom = "game_"+gameId;
-    io.to(gameRoom).emit('start', game);
+
+    Game.findOne({socket_id: gameId}, function(err, game){
+      if (err) throw err;
+
+      User.findOne({_id: joiningPlayer._id}, function(err, user){
+        var newScore  = new Score();
+        var newPlayer = user;
+
+        newScore.player = newPlayer;
+        newScore.save();
+
+        game.players.push(newPlayer);
+        game.scores.push(newScore);
+        game.save();
+
+      });
+      socket.join(gameRoom);
+      console.log(joiningPlayer, " just joined the game ", game);
+
+      var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+      game.grid = [];
+
+      for (var i = 0; i < 9; i++) {
+        var shape = shapes[Math.floor(Math.random()*shapes.length)];
+        var shapeIndex = shapes.indexOf(shape);
+        game.grid.push(shape);
+        shapes.splice(shapeIndex, 1);
+      }
+
+      io.to(gameRoom).emit('start', game);
+    });
+    // var game = games[gameId];
+    // Save player
+    // player[socketId] = {
+    //   id: socketId,
+      // name: req.body.name,
+    //   score: 0
+    // }
+    // game.players.push(player[socketId]);
+    // Send to all members of that game updating that a new player has joined
+    // socket.join(gameRoom);
+    // console.log(joiningPlayer, " just joined the game ", game);
+
+    // Setup main-grid on server side to be pushed to both players on the client side
+    // var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+    // game['main-grid'] = [];
+
+    // for (var i = 0; i < 9; i++) {
+    //   var shape = shapes[Math.floor(Math.random()*shapes.length)];
+    //   var shapeIndex = shapes.indexOf(shape);
+    //   game['main-grid'].push(shape);
+    //   shapes.splice(shapeIndex, 1);
+    // }
+    // Send information about the game to the gameRoom on the client side
+    // gameRoom = "game_"+gameId;
+    // io.to(gameRoom).emit('start', game);
   })
 
   // socket.on("playerGridSquare", function(socketId, playerShape) {
