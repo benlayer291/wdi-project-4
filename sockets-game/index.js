@@ -84,29 +84,21 @@ io.on('connection', function(socket){
     console.log("by", creatingPlayer);
     // If new game, create new game in database? The object below is like model in database
     // var newGame = new Game({socket_id: socketId})
-    console.log("PLAYER", creatingPlayer._id);
-    var newGame        = new Game({socket_id: socketId});
+    var newGame   = new Game({socket_id: socketId});
+    var newScore  = new Score();
+    User.findOne({_id: creatingPlayer._id}, function(err, user){
+      var newPlayer = user;
 
-    newGame.save(function(err, game){
-     var newPlayer = User.findOne({_id: creatingPlayer._id}, function(err, player){
-      if(err) throw err;
+      newScore.player = newPlayer;
+      newScore.save();
 
-      var newScore       = new Score();
 
-      newScore.save(function(err, score){
-       if(err) throw err;
-       console.log("The new score is:", score);
+      newGame.players.push(newPlayer);
+      newGame.scores.push(newScore);
+      newGame.save();
 
-       player.scores.push(score);
-
-       player.save()
-
-       game.players.push(player);
-
-       console.log("The new game is:", game);
-     });
+      console.log("THE NEW GAME", newGame);
     });
-   });
    
     games[socketId] = {
       id: socketId,
