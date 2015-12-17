@@ -61,12 +61,12 @@ function SocketsController(TokenService, CurrentUser) {
     return $('#player-selected-gridsquare').html(playerShape);
   }
 
-  function playGame(){
-    var gameId        = $(this).data('gameid');
+  function playGame(index){
+    var gameId        = $('#'+index).data('gameid');
     var socketId      = socket.io.engine.id;
     var player        = CurrentUser.user;
     var playerShape   = $('#player-selected-gridsquare').html();
-    var squareClicked = $(this).html();
+    var squareClicked = $('#'+index).html();
 
     return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
   }
@@ -88,7 +88,7 @@ function SocketsController(TokenService, CurrentUser) {
       }
       $('.timer').html('Time: ' + gameTime);
     }, 1000);
-    return $('.game-gridsquare').on('click', playGame);
+    return timeRemaining;
   }
 
   //SOCKET LISTENING EVENTS
@@ -157,12 +157,7 @@ function SocketsController(TokenService, CurrentUser) {
     }
 
     // Player gets a point
-    console.log("SCORE THAT HAS CHANGED:", score);
     $('#score-'+score.player).html('Score: ' + score.value);
-    // for (var i = 0; i < game.players.length; i++) {
-    //   console.log(game.players[i]);
-    //   $('#score-'+game.players[i].id).html('Score: '+ game.players[i].score);
-    // }
   })
 
 return self.init();

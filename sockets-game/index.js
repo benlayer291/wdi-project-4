@@ -138,7 +138,7 @@ io.on('connection', function(socket){
     });
   });
 
-socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
+  socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
 
     Game.findOne({socket_id: gameId}, function(err, game){
       if (err) throw err;
@@ -164,15 +164,12 @@ socket.on("playingGame", function(gameId, socketId, player, playerShape, squareC
 
               //send to front-end
               return io.to(gameRoom).emit('correctChoice', game, socketId, score);
-            })
-          }
-        }
-      } 
-      // else {
-      //   io.to(gameRoom).emit('incorrectChoice', game, socketId);
-      // }
-    })
-  })
+            });
+          };
+        };
+      }; 
+    });
+  });
 
 socket.on("endGame", function(game){
   console.log("Game that is ending", games[game.id]);

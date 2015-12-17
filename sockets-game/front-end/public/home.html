@@ -51,7 +51,7 @@
   </div>
 
   <ul class='main-game-grid game-grid'>
-    <li class='game-gridsquare' id='{{ $index }}' ng-repeat="square in sockets.squares track by $index">
+    <li class='game-gridsquare' id='{{ $index }}' ng-repeat="square in sockets.squares track by $index" ng-click="sockets.squares[$index] || sockets.playGame($index)">
       {{square}}
     </li>
   </ul>
