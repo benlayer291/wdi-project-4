@@ -1,11 +1,14 @@
 <!-- socket script -->
 <section>
-
-  <h1>SHAPES</h1>
-
+<div id="home">
+<div class="row">
+  <div class="col-sm-12 col-md-6 col-md-offset-3">
+    <h1 id="logo">SHAPES</h1>
+  </div>
+</div>
   <div ng-hide="users.checkLoggedIn()" class="row">
     <div class="col-md-6 col-md-offset-3">
-      <h2>You must <a href="#" ui-sref="register">register</a> or <a href="#" ui-sref="login">login</a> to play</h2>
+      <h2><a href="#" ui-sref="register">REGISTER</a> or <a href="#" ui-sref="login">LOGIN</a></h2>
     </div>
   </div>
 
@@ -14,5 +17,5 @@
       <h2><a href="#" ui-sref="game">PLAY</a></h2>
     </div>
   </div>
-
+</div>
 </section>

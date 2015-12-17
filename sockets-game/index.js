@@ -124,7 +124,7 @@ io.on('connection', function(socket){
         socket.join(gameRoom);
 
         //CREATE GRID
-        var shapes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+        var shapes = ['&#9623;', '&#9679;', '&#9658;', '&#9648;', '&#9670;', '&#9646;', '&#9625;', '&#9630', '&#10030'];
         game.grid = [];
         for (var i = 0; i < 9; i++) {
           var shape = shapes[Math.floor(Math.random()*shapes.length)];

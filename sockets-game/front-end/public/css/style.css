@@ -8,12 +8,32 @@ body {
   max-width: 960px;
   margin: 0 auto;
   text-align: center;
+  font-family: 'Dosis', sans-serif;
+  font-weight: 200;
+  background-color: #FAFAFA;
 }
 
 /*Header styling*/
 
 header ul li {
   display: inline;
+}
+
+/*home.html styling*/
+#home {
+  height: 200px;
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+#logo {
+  color: #00C853;
+  font-size: 84px;
+  font-weight: 500;
 }
 
 /*Grid styling*/
