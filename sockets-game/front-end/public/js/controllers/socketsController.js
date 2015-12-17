@@ -93,15 +93,54 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
 
   function endGame(game) {
     var endGame;
+    var finalScores = [];
     Game.get({id:game._id}, function(data){
-      endGame = data
+      endGame = data.game
     })
 
     setTimeout(function(){
-      console.log(endGame);
+      console.log(endGame.scores);
+      for(var i=0; i< endGame.scores.length; i++) {
+        Score.get({id: endGame.scores[i]}, function(data){
+          finalScores.push(data.score.value);
+        })
+      }
     }, 100)
 
-
+    setTimeout(function(){
+      for (var i =0; i < finalScores.length-1; i++) {
+        if (finalScores[i] === finalScores[i+1]) {
+          console.log('draw')
+          $('.notifications')
+            .empty()
+            .append('<li>DRAW</li>');
+        } else if (finalScores[i] > finalScores[i+1]) {
+          console.log('screen 1 wins');
+          console.log(CurrentUser.user);
+          console.log(endGame.players[i]);
+          if (CurrentUser.user._id === endGame.players[i]._id) {
+            $('.notifications')
+              .empty()
+              .append('<li>YOU WIN</li>');
+          } else {
+            $('.notifications')
+              .empty()
+              .append('<li>YOU LOSE</li>');
+          }
+        } else {
+          console.log('screen 2 wins');
+          if (CurrentUser.user._id === endGame.players[i]._id) {
+            $('.notifications')
+              .empty()
+              .append('<li>YOU LOSE</li>');
+          } else {
+            $('.notifications')
+              .empty()
+              .append('<li>YOU WIN</li>');
+          }
+        }
+      }
+    },200)
   }
 
   //SOCKET LISTENING EVENTS
