@@ -68,19 +68,20 @@ http.listen(port, function(){
 
 // Create a socket.io server and relate it to the node.js http server
 var io    = require('socket.io')(http);
-var Game  = require('../models/game');
-var User  = require('../models/user');
-var Score = require('../models/score');
+var Game  = require('./models/game');
+var User  = require('./models/user');
+var Score = require('./models/score');
 var games    = {};
 var player   = {};
 var gameRoom;
 
 //Listen for socket.io connections, linked to client.js file on frontend
-nsp.on('connection', function(socket){
+io.on('connection', function(socket){
   console.log("CONNECTED IS BEING TRIGGERED");
 
-  socket.on("newGame", function(socketId){
+  socket.on("newGame", function(socketId, creatingPlayer){
     console.log("Game started with id: ", socketId);
+    console.log("by", creatingPlayer);
     // If new game, create new game in database? The object below is like model in database
     // var newGame = new Game({socket_id: socketId})
     games[socketId] = {
@@ -100,7 +101,7 @@ nsp.on('connection', function(socket){
     socket.join(gameRoom);
   });
 
-  socket.on("joinedGame", function(gameId, socketId) {
+  socket.on("joinedGame", function(gameId, socketId, joiningPlayer) {
     var game = games[gameId];
     // Save player
     player[socketId] = {

@@ -7,6 +7,8 @@ function SocketsController(TokenService, CurrentUser) {
 
   var self   = this;
   var socket = io.connect();
+  var socketId;
+  var gameId;
   var gameChannel;
 
   self.creatingPlayer   = {}
@@ -30,19 +32,18 @@ function SocketsController(TokenService, CurrentUser) {
 
   function start(){
     event.preventDefault();
+    socketId = socket.io.engine.id;
     self.creatingPlayer = CurrentUser.user;
     console.log("creating player is", self.creatingPlayer);
-    return socket.emit('newGame', socket.io.engine.id);
+    return socket.emit('newGame', socketId, self.creatingPlayer);
   }
 
   function join(){
     event.preventDefault();
-    CurrentUser.saveUser(TokenService.decodeToken());
-    console.log("current user is",CurrentUser.user);
+    socketId = socket.io.engine.id;
+    gameId = $(this).data('gameid');
     self.joiningPlayer = CurrentUser.user;
-    console.log("joining player is", self.joiningPlayer);
-    var gameId = $(this).data('gameid');
-    socket.emit('joinedGame', gameId, socket.io.engine.id)
+    socket.emit('joinedGame', gameId, socketId, self.joiningPlayer);
     return inGame(gameId)
   }
 
