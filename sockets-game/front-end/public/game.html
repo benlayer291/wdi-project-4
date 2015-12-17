@@ -1,3 +1,15 @@
+<section ng-hide="users.checkLoggedIn()">
+
+  <h1>SHAPES</h1>
+  
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h2>You must <a href="#" ui-sref="register">register</a> or <a href="#" ui-sref="login">login</a> to play</h2>
+    </div>
+  </div>
+
+</section>
+
 <section ng-show="users.checkLoggedIn()" ng-controller="SocketsController as sockets">
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
