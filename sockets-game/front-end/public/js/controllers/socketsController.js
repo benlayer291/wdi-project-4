@@ -22,6 +22,7 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
   self.inGame    = inGame;
   self.playGame  = playGame;
   self.gameTimer = gameTimer;
+
   self.setUpPlayerShape = setUpPlayerShape;
 
   function init(){
