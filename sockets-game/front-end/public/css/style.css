@@ -141,6 +141,62 @@ header ul li {
   color: #00C853;
 }
 
+/*profile.html styling*/
+
+#profile {
+  margin: 25px auto;
+}
+
+#profile h1 {
+  color: #00C853;
+  font-size: 56px;
+  margin: 25px auto 0 auto;
+}
+
+#profile h2 {
+  margin: 25px auto 0 auto;
+}
+
+#profile h3 {
+  font-size: 18px;
+}
+
+#profile-scores {
+  margin-top: 25px;
+}
+
+/*#profile ul {
+  margin-top: 25px;
+}
+*/
+#profile h3#profile-score {
+  font-size: 18px;
+  transition:.5s ease-out;
+}
+
+#profile h3#profile-score:hover {
+  font-size: 18px;
+  color: #00C853;
+}
+
+#profile h3 span {
+  padding: 0 12px;
+}
+
+#profile h3 span#profile-score-value {
+  font-size: 24px;
+}
+
+#profile a{
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#profile a:hover{
+  color: #00C853;
+  text-decoration: none;
+}
+
 /*Grid styling*/
 
 .player-grid {

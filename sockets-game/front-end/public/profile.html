@@ -16,13 +16,39 @@
   </nav>
 </header>
 
-<section>
+<div class="container-fluid" id="profile">
 
-  <h1>SHAPES</h1>
+<section>
 
   <div ng-hide="users.checkLoggedIn()" class="row">
     <div class="col-md-6 col-md-offset-3">
       <h2>You must <a href="#" ui-sref="register">register</a> or <a href="#" ui-sref="login">login</a> to play</h2>
+    </div>
+  </div>
+
+</section>
+
+<section ng-show="users.checkLoggedIn()">
+
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h1>{{ users.user.local.firstname | uppercase}} {{users.user.local.lastname | uppercase}}</h1>
+    </div>
+  </div>
+  
+  <div class="row" ng-controller="ScoresController as scores">
+    <div class="col-sm-6 col-md-6 col-sm-offset-3 col-md-offset-3">
+      <h2>TOP 10 SCORES</h2>
+      <div class="row" id="profile-scores">
+        <div class="col-xs-6 col-sm-4 col-md-3" ng-repeat="score in scores.oneUserScores | orderBy : '-value'  | limitTo : 10">
+            <h3 id="profile-score"><span>{{$index + 1}}:</span><span id="profile-score-value">{{ score.value }}</span></h3>
+        </div>
+      </div>
+      <!-- <ul>
+        <li ng-repeat="score in scores.oneUserScores | orderBy : '-value'  | limitTo : 10">
+          <h3 id="profile-score"><span>{{$index + 1}}:</span><span id="profile-score-value">{{ score.value }}</span></h3>
+        </li>
+      </ul> -->
     </div>
   </div>
 
@@ -34,24 +60,4 @@
 
 </section>
 
-<section ng-show="users.checkLoggedIn()">
-
-  <div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <h1>PROFILE</h1>
-      <h2>{{ users.user.local.firstname | uppercase}} {{users.user.local.lastname | uppercase}}</h2>
-    </div>
-  </div>
-  
-  <div class="row" ng-controller="ScoresController as scores">
-    <div class="col-md-6 col-md-offset-3">
-      <h3>TOP 10 SCORES</h3>
-      <ul>
-        <li ng-repeat="score in scores.oneUserScores | orderBy : '-value'  | limitTo : 10">
-          {{$index + 1}}: {{ score.value }}
-        </li>
-      </ul>
-    </div>
-  </div>
-
-</section>
+</div>
