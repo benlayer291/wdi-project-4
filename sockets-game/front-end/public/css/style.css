@@ -97,6 +97,7 @@ header ul li {
 
 #login button:hover {
   color: #00C853;
+  border: none;
 }
 
 /*register.html styling */
@@ -139,6 +140,7 @@ header ul li {
 
 #register button:hover {
   color: #00C853;
+  border: none;
 }
 
 /*profile.html styling*/
@@ -165,10 +167,6 @@ header ul li {
   margin-top: 25px;
 }
 
-/*#profile ul {
-  margin-top: 25px;
-}
-*/
 #profile h3#profile-score {
   font-size: 18px;
   transition:.5s ease-out;
@@ -199,43 +197,52 @@ header ul li {
 
 /*Grid styling*/
 
-.player-grid {
-  width: 450px;
-  height: 90px;
-  margin: 25px auto;
+a {
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+a:hover {
+  text-decoration: none;
+  color: #00C853;
+}
+
+#game .game-info {
+  height: 25px;
+  line-height: 25px;
+  margin-top: 5px;
+}
+
+#game .game-info ul li {
+  font-size: 24px;
+}
+
+#game button {
+  border: none;
+  background: #FAFAFA;
+  font-size: 18px;
+  font-weight: 500;
+  color: #23527C;
+  transition:.5s ease-out;
+}
+
+#game button:hover {
+  border: none;
+  color: #00C853;
 }
 
 .player-gridsquare {
-  width: 88px;
-  height: 88px;
-  line-height: 88px;
+  width: 82px;
+  height: 82px;
+  line-height: 82px;
   float: left;
-  border: 1px solid black;
-  font-size: 18px;
+  margin: 2px;
+  border: 4px solid #00C853;
+  border-radius: 5px;
+  font-size: 42px;
 }
 
 .player-selected-grid {
-  width: 90px;
-  height: 90px;
-  margin: 25px auto;
-}
-
-.cpu-grid {
-  width: 450px;
-  height: 90px;
-  margin: 25px auto;
-}
-
-.cpu-gridsquare {
-  width: 88px;
-  height: 88px;
-  line-height: 88px;
-  float: left;
-  border: 1px solid black;
-  font-size: 18px;
-}
-
-.cpu-grid-selected{
   width: 90px;
   height: 90px;
   margin: 25px auto;
@@ -248,12 +255,45 @@ header ul li {
 }
 
 .game-gridsquare {
-  width: 148px;
-  height: 148px;
-  line-height: 148px;
+  width: 140px;
+  height: 140px;
+  line-height: 140px;
+  margin: 2px;
   float: left;
-  border: 1px solid black;
-  font-size: 24px;
+  border: 4px solid #00C853;
+  border-radius: 5px;
+  font-size: 42px;
+}
+
+@media only screen and (max-width: 500px) {
+
+  .player-gridsquare {
+    font-size: 42px;
+    margin: 2px;
+  }
+
+  .player-selected-grid {
+    width: 90px;
+    height: 90px;
+    margin: 25px auto;
+  }
+
+  .game-grid {
+    width: 300px;
+    height: 300px;
+    margin: 25px auto;
+  }
+
+  .game-gridsquare {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    float: left;
+    margin: 2px;
+    border: 4px solid #00C853;
+    border-radius: 5px;
+    font-size: 42px;
+  }
 }
 
 /*Footer styling*/
