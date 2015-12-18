@@ -15,9 +15,18 @@ body {
 }
 
 /*Header styling*/
+.navbar {
+  background-color: #00C853;
+}
+.navbar-default .navbar-nav>li>a {
+  font-size: 16px;
+  color: #FAFAFA;
+}
 
-header ul li {
-  display: inline;
+.navbar-default .navbar-brand {
+  font-size: 32px;
+  color: #FAFAFA;
+  font-weight: 500;
 }
 
 /*home.html styling*/
@@ -294,10 +303,4 @@ a:hover {
     border-radius: 5px;
     font-size: 42px;
   }
-}
-
-/*Footer styling*/
-
-footer ul li {
-  display: inline;
 }
