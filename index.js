@@ -63,7 +63,7 @@ app.use(express.static(__dirname + '/front-end/public'));
 var http    = require('http').Server(app);
 
 http.listen(port, function(){
-  console.log('***listening on localhost:3000***');
+  console.log('***listening on', port);
 });
 
 // Create a socket.io server and relate it to the node.js http server
