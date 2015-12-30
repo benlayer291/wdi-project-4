@@ -1,6 +1,6 @@
 angular
   .module('shapes', ['ngResource', 'angular-jwt', 'ui.router'])
-  .constant('API', process.env.PORT)
+  .constant('API','http://freeshapes.herokuapp.com/api')
   .config(MainRouter)
   .config(function($httpProvider){
     $httpProvider.interceptors.push('AuthInterceptor')
