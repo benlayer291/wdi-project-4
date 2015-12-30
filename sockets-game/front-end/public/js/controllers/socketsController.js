@@ -6,7 +6,7 @@ SocketsController.$inject = ['Game', 'Score', 'TokenService', 'CurrentUser']
 function SocketsController(Game, Score, TokenService, CurrentUser) {
 
   var self   = this;
-  var socket = io.connect();
+  var socket = io.connect(window.location.hostname);
   var socketId;
   var gameId;
   var gameChannel;
