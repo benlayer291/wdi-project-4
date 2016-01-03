@@ -240,6 +240,10 @@ a:hover {
   color: #00C853;
 }
 
+#game .chooseGame {
+  display: none;
+}
+
 .player-gridsquare {
   width: 82px;
   height: 82px;

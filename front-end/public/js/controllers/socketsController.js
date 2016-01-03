@@ -16,14 +16,15 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.finalScores      = [];
   self.waitingGames     = [];
 
-  self.squares   = new Array(9);
-  self.getGames  = getGames;
-  self.init      = init;
-  self.start     = start;
-  self.join      = join;
-  self.inGame    = inGame;
-  self.playGame  = playGame;
-  self.gameTimer = gameTimer;
+  self.squares     = new Array(9);
+  self.getGames    = getGames;
+  self.gamesToggle = gamesToggle;
+  self.init        = init;
+  self.start       = start;
+  self.join        = join;
+  self.inGame      = inGame;
+  self.playGame    = playGame;
+  self.gameTimer   = gameTimer;
 
   self.setUpPlayerShape = setUpPlayerShape;
 
@@ -37,10 +38,15 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       console.log(self.waitingGames);
       for (var i=0; i<self.waitingGames.length; i++){
         if (self.waitingGames[i].players[0]._id !== CurrentUser.user._id) {
-          $("#notifications").append("<li>PLAY  " + self.waitingGames[i].players[0].local.firstname+ " "+ self.waitingGames[i].players[0].local.lastname+ "?<a href='#' data-gameid='"+self.waitingGames[i].socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
+          $("#notifications").append("<li class='chooseGame'>PLAY  " + self.waitingGames[i].players[0].local.firstname+ " "+ self.waitingGames[i].players[0].local.lastname+ "?<a href='#' data-gameid='"+self.waitingGames[i].socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
         }
       }
     });
+  }
+
+  function gamesToggle(){
+    event.preventDefault();
+    $('.chooseGame').slideToggle();
   }
 
   function init(){
