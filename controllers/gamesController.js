@@ -3,7 +3,7 @@ var User  = require('../models/user');
 var Score = require('../models/score');
 
 function gamesIndex(req,res) {
-  Game.find({}, function(err, games){
+  Game.find({}).populate('players').exec(function(err, games){
     if (err) return res.status(500).json({ message: 'Something went wrong.' });
     return res.status(200).json({ games: games });
   });

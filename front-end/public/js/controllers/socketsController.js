@@ -2,8 +2,8 @@ angular
   .module('shapes')
   .controller('SocketsController', SocketsController)
 
-SocketsController.$inject = ['Game', 'Score', 'TokenService', 'CurrentUser']
-function SocketsController(Game, Score, TokenService, CurrentUser) {
+SocketsController.$inject = ['Game', 'Score', 'User', 'TokenService', 'CurrentUser']
+function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   var self   = this;
   var socket = io.connect();
@@ -14,8 +14,10 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
   self.creatingPlayer   = {};
   self.joiningPlayer    = {};
   self.finalScores      = [];
+  self.waitingGames     = [];
 
   self.squares   = new Array(9);
+  self.getGames  = getGames;
   self.init      = init;
   self.start     = start;
   self.join      = join;
@@ -24,6 +26,20 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
   self.gameTimer = gameTimer;
 
   self.setUpPlayerShape = setUpPlayerShape;
+
+  function getGames(){
+    Game.query(function(data){
+      for (var i=0; i<data.games.length; i++){
+        if (data.games[i].players.length<2) {
+          self.waitingGames.push(data.games[i]);
+        }
+      }
+      console.log(self.waitingGames);
+      for (var i=0; i<self.waitingGames.length; i++){
+        $("#notifications").append("<li>PLAY  " + self.waitingGames[i].players[0].local.firstname+ " "+ self.waitingGames[i].players[0].local.lastname+ "?<a href='#' data-gameid='"+self.waitingGames[i].socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
+      }
+    });
+  }
 
   function init(){
     console.log('initialising');
@@ -50,7 +66,7 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
   }
 
   function inGame(gameid){
-    $(".game-list").hide();
+    // $(".game-list").hide();
     $(".new-game-tools").hide();
     // $(".message").html("<h2>You are playing in game: "+gameid+"</h2>");
     $("#notifications")
@@ -150,6 +166,7 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
   //SOCKET LISTENING EVENTS
   socket.on('connect', function(){
     console.log('connected', socket.io.engine.id);
+    return getGames();
   });
 
   socket.on('addToListOfGames', function(newGame){
@@ -161,7 +178,7 @@ function SocketsController(Game, Score, TokenService, CurrentUser) {
       console.log("DIFFERENT BROWSER", newGame.players);
       return $("#notifications")
         .empty()
-        .append("<li>PLAY  " + newGame.players[0]+"?<a href='#' data-gameid='"+newGame.socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>")
+        .append("<li>PLAY  " + newGame.players[0]+"?<a href='#' data-gameid='"+newGame.socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
       // return $(".game-list").html("Game: "+newGame.socket_id+"<span> Players: "+newGame.players.length+"</span><a href='#' data-gameid='"+newGame.socket_id+"' class='join-game'> Join</a></li>");
     }
   })
