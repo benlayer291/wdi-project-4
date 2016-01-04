@@ -147,8 +147,12 @@ io.on('connection', function(socket){
       if (err) throw err;
 
       var newScore  = new Score();
-      //Need to create new player as if it was a seed file 
-      var newPlayer = {}
+      //Need to create new CPU player, like a user otherwise errors 
+      var newPlayer            = new User();
+      newPlayer.local.email      = 'CPU@CPU.com';
+      newPlayer.local.firstname  = 'CPU';
+      newPlayer.local.lastname   = 'CPU';
+      newPlayer.local.password   = 'password';
 
       newScore.player = newPlayer;
       newScore.save()
