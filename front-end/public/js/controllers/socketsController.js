@@ -15,6 +15,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.joiningPlayer    = {};
   self.finalScores      = [];
   self.waitingGames     = [];
+  self.gameTime         = 30;
 
   self.squares     = new Array(9);
   self.getGames    = getGames;
@@ -97,7 +98,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   }
 
   function setUpPlayerShape(game) {
-    var socketId    = socket.io.engine.id;
+    // var socketId    = socket.io.engine.id;
     var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
 
     return $('#player-selected-gridsquare').html(playerShape);
@@ -114,21 +115,42 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   }
 
   function gameTimer(game) {
-    var gameTime = 30;
+    // var gameTime = self.gameTime;
     
-    $('.timer').html('TIME: ' + gameTime);
+    $('.timer').html('TIME: ' + self.gameTime);
     setTimeout(function(){ $('#notifications').empty() }, 1000)
     var timeRemaining = setInterval(function(){
-      if(gameTime > 0) {
-        gameTime--;
+      if(self.gameTime > 0) {
+        self.gameTime--;
       } else {
         $('.game-gridsquare').off('click');
         clearInterval(timeRemaining);
         endGame(game);
       }
-      $('.timer').html('TIME: ' + gameTime);
+      $('.timer').html('TIME: ' + self.gameTime);
     }, 1000);
     return timeRemaining;
+  }
+
+  function cpuPlay(game) {
+
+    var max      = 20;
+    var min      = 15;
+    var interval = (Math.floor(Math.random() * (max - min + 1)) + min)*100;
+
+    var cpuMove = setInterval(function(){
+
+      if(self.gameTime > 0) {
+        cpuClickEvent();
+      } else {
+        clearInterval(cpuPlay);
+        $('.game-gridsquare').off('click');
+      }
+    }, interval);
+  }
+
+  function cpuClickEvent() {
+    console.log('CPU CLICK');
   }
 
   function endGame(game) {
@@ -224,7 +246,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       $('.timer').html('TIME ' + countdownTime);
     }, 1000);
 
-    // Setup main-grid when timer finishes- same for both players, comes from server side
+    // Setup main-grid- same for both players, comes from server side
     for (var i = 0; i < game.grid.length; i++) {
       $('#'+i)
         .html(game.grid[i])
@@ -242,6 +264,48 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     }
 
     return setUpPlayerShape(game);
+  });
+
+  socket.on('cpuStart', function(game){
+    var countdownTime = 5;
+    console.log("CPU START GAME INFO:", game);
+    // Countdown Timer
+    $('#notifications')
+      .empty()
+      .append('<li>GET READY</li>');
+    $('.timer').html('TIME: ' + countdownTime);
+    var countdownRemaining = setInterval(function(){
+      if(countdownTime > 0) {
+        countdownTime--;
+      } else {
+        $('#notifications')
+          .empty()
+          .append('<li>GO!</li>');
+        clearInterval(countdownRemaining);
+        gameTimer(game);
+        cpuPlay(game);
+      }
+      $('.timer').html('TIME ' + countdownTime);
+    }, 1000);
+
+    // Setup main-grid when timer finishes- same for both players, comes from server side
+    for (var i = 0; i < game.grid.length; i++) {
+      $('#'+i)
+        .html(game.grid[i])
+        .attr('data-gameid', game.socket_id);
+    }
+
+    // Setup scores with player socket ids
+    for (var i = 0; i < game.players.length-1; i++) {
+      $('#score-1')
+        .empty()
+        .append('<li class="animated fadeIn" id=score-'+game.players[i]+'>SCORE: 0</li>');
+      $('#score-2')
+        .empty()
+        .append('<li class="animated fadeIn" id=score-'+game.players[i+1]+'>SCORE: 0</li>');
+    }
+    // Setup player shapes
+    setUpPlayerShape(game);
   });
 
   socket.on('correctChoice', function(game, socketId, score){

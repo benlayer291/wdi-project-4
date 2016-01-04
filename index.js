@@ -173,7 +173,7 @@ io.on('connection', function(socket){
         shapes.splice(shapeIndex, 1);
       }
 
-      io.to(gameRoom).emit('start', game);
+      io.to(gameRoom).emit('cpuStart', game);
     });
   });
 
