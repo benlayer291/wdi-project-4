@@ -18,15 +18,44 @@ body {
 .navbar {
   background-color: #00C853;
 }
+
 .navbar-default .navbar-nav>li>a {
   font-size: 16px;
   color: #FAFAFA;
+  transition:.5s ease-out;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+  color: #23527C;
 }
 
 .navbar-default .navbar-brand {
   font-size: 32px;
   color: #FAFAFA;
   font-weight: 500;
+  transition:.5s ease-out;
+}
+
+.navbar-default .navbar-brand:hover {
+  color: #23527C;
+}
+
+.navbar-default .navbar-toggle {
+  border: none;
+}
+
+.navbar-default .navbar-toggle:hover{
+  border: solid 1px #fff;
+  background-color: #00C853;
+}
+
+.navbar-default .navbar-toggle:focus{
+  border: solid 1px #fff;
+  background-color: #00C853;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: #fff;
 }
 
 /*home.html styling*/
@@ -206,12 +235,12 @@ body {
 
 /*Grid styling*/
 
-a {
+#game a {
   color: #23527C;
   transition:.5s ease-out;
 }
 
-a:hover {
+#game a:hover {
   text-decoration: none;
   color: #00C853;
 }
