@@ -60,6 +60,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     CurrentUser.saveUser(TokenService.decodeToken());
     console.log("current user is",CurrentUser.user);
     $("#notifications").on("click", ".join-game", join);
+    // $("#notifications").on("click", ".cpu-join-game", cpuJoin);
   };
 
   function start(){
@@ -75,8 +76,15 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     socketId = socket.io.engine.id;
     gameId = $(this).data('gameid');
     self.joiningPlayer = CurrentUser.user;
-    socket.emit('joinedGame', gameId, socketId, self.joiningPlayer);
-    return inGame(gameId);
+    $(".new-game-tools").hide();
+    return socket.emit('joinedGame', gameId, socketId, self.joiningPlayer);
+    // return inGame(gameId);
+  }
+
+  function cpuJoin(){
+    event.preventDefault();
+    gameId = $(this).data('gameid');
+    socket.emit('cpuJoinedGame', gameId)
   }
 
   function inGame(gameid){
@@ -138,9 +146,10 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           finalScores.push(data.score.value);
         })
       }
-    }, 200)
+    }, 400)
 
     setTimeout(function(){
+      console.log(finalScores);
       for (var i =0; i < finalScores.length-1; i++) {
         if (finalScores[i] === finalScores[i+1]) {
           console.log('draw')
@@ -173,7 +182,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           }
         }
       }
-    },200)
+    },450)
   }
 
 
@@ -191,10 +200,6 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     } else {
       console.log("DIFFERENT BROWSER", newGame);
       return getGames();
-      // $("#notifications")
-        // .empty()
-        // .append("<li>PLAY  " + newGame.players[0]+"?<a href='#' data-gameid='"+newGame.socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
-      // return $(".game-list").html("Game: "+newGame.socket_id+"<span> Players: "+newGame.players.length+"</span><a href='#' data-gameid='"+newGame.socket_id+"' class='join-game'> Join</a></li>");
     }
   })
 
