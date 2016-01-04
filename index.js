@@ -214,7 +214,6 @@ io.on('connection', function(socket){
   });
   
   socket.on("endGame", function(game){
-    console.log('remooving CPU');
     User.findOneAndRemove({_id: game.players[1]}, function(err){
       if (err) return console.log('CPU DELTEE, Something went wrong.');
       return console.log('User succesfully deleted');
