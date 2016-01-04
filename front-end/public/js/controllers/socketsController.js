@@ -28,6 +28,14 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   self.setUpPlayerShape = setUpPlayerShape;
 
+  function init(){
+    console.log('initialising');
+    CurrentUser.saveUser(TokenService.decodeToken());
+    console.log("current user is",CurrentUser.user);
+    $("#notifications").on("click", ".join-game", join);
+    // $("#notifications").on("click", ".cpu-join-game", cpuJoin);
+  };
+
   function getGames(){
     Game.query(function(data){
       for (var i=0; i<data.games.length; i++){
@@ -55,14 +63,6 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     $('.chooseGame').slideToggle();
   }
 
-  function init(){
-    console.log('initialising');
-    CurrentUser.saveUser(TokenService.decodeToken());
-    console.log("current user is",CurrentUser.user);
-    $("#notifications").on("click", ".join-game", join);
-    // $("#notifications").on("click", ".cpu-join-game", cpuJoin);
-  };
-
   function start(){
     event.preventDefault();
     socketId = socket.io.engine.id;
@@ -88,9 +88,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   }
 
   function inGame(gameid){
-    // $(".game-list").hide();
     $(".new-game-tools").hide();
-    // $(".message").html("<h2>You are playing in game: "+gameid+"</h2>");
     $("#notifications")
       .empty()
       .append("<li class='animated fadeIn'>WAITING FOR PLAYER</li><li class='animated fadeIn'>or</li><li class='animated fadeIn'><button type='submit' class='btn btn-default new-game-tools'>PLAY CPU</button></li>")
@@ -146,7 +144,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           finalScores.push(data.score.value);
         })
       }
-    }, 400)
+    }, 400);
 
     setTimeout(function(){
       console.log(finalScores);
@@ -182,7 +180,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           }
         }
       }
-    },450)
+    },500);
   }
 
 
