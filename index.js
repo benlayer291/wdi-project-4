@@ -139,6 +139,40 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on("cpuJoinedGame", function(gameId) {
+    console.log('CPU joined game with id', gameId)
+    gameRoom = "game_"+gameId;
+
+    Game.findOne({socket_id: gameId}, function(err, game){
+      if (err) throw err;
+
+      var newScore  = new Score();
+      //Need to create new player as if it was a seed file 
+      var newPlayer = {}
+
+      newScore.player = newPlayer;
+      newScore.save()
+
+      game.players.push(newPlayer);
+      game.scores.push(newScore);
+      game.save()
+
+      socket.join(gameRoom)
+      //CREATE GRID
+      // var shapes = ['&#9623', '&#9679', '&#9658', '&#9648', '&#9670', '&#9646', '&#9625''&#9630', '&#10030'];
+      var shapes = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+      game.grid = [];
+      for (var i = 0; i < 9; i++) {
+        var shape = shapes[Math.floor(Math.random()*shapes.length)];
+        var shapeIndex = shapes.indexOf(shape);
+        game.grid.push(shape);
+        shapes.splice(shapeIndex, 1);
+      }
+
+      io.to(gameRoom).emit('start', game);
+    });
+  });
+
   socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
 
     Game.findOne({socket_id: gameId}, function(err, game){

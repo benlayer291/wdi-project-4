@@ -33,7 +33,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     CurrentUser.saveUser(TokenService.decodeToken());
     console.log("current user is",CurrentUser.user);
     $("#notifications").on("click", ".join-game", join);
-    // $("#notifications").on("click", ".cpu-join-game", cpuJoin);
+    $("#notifications").on("click", ".cpu-join-game", cpuJoin);
   };
 
   function getGames(){
@@ -83,15 +83,16 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   function cpuJoin(){
     event.preventDefault();
+    console.log($(this).data('gameid'));
     gameId = $(this).data('gameid');
-    socket.emit('cpuJoinedGame', gameId)
+    return socket.emit('cpuJoinedGame', gameId)
   }
 
   function inGame(gameid){
     $(".new-game-tools").hide();
     $("#notifications")
       .empty()
-      .append("<li class='animated fadeIn'>WAITING FOR PLAYER</li><li class='animated fadeIn'>or</li><li class='animated fadeIn'><button type='submit' class='btn btn-default new-game-tools'>PLAY CPU</button></li>")
+      .append("<li class='animated fadeIn'>WAITING FOR PLAYER</li><li class='animated fadeIn'>or</li><li class='animated fadeIn'><button type='submit' data-gameid='"+gameid+"' class='btn btn-default new-game-tools cpu-join-game'>PLAY CPU</button></li>")
     return self.gameid;
   }
 
@@ -181,6 +182,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         }
       }
     },500);
+  //need to return socket.emit('endGame') so that cpu user is deleted?
   }
 
 
