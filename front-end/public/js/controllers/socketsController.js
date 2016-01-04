@@ -85,7 +85,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     // $(".message").html("<h2>You are playing in game: "+gameid+"</h2>");
     $("#notifications")
       .empty()
-      .append("<p class='animated fadeIn'>WAITING FOR PLAYER</p>")
+      .append("<li class='animated fadeIn'>WAITING FOR PLAYER</li><li class='animated fadeIn'>or</li><li class='animated fadeIn'><button type='submit' class='btn btn-default new-game-tools'>PLAY CPU</button></li>")
     return self.gameid;
   }
 
