@@ -217,7 +217,7 @@ a:hover {
 }
 
 #game .game-info {
-  height: 25px;
+  min-height: 25px;
   line-height: 25px;
   margin-top: 5px;
 }
