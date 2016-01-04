@@ -35,7 +35,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           self.waitingGames.push(data.games[i]);
         }
       }
-      console.log(self.waitingGames);
+      console.log('Current games to play',self.waitingGames);
       for (var i=0; i<self.waitingGames.length; i++){
         if (self.waitingGames[i].players[0]._id !== CurrentUser.user._id) {
           $("#notifications").append("<li class='chooseGame'>PLAY  " + self.waitingGames[i].players[0].local.firstname+ " "+ self.waitingGames[i].players[0].local.lastname+ "?<a href='#' data-gameid='"+self.waitingGames[i].socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
@@ -46,6 +46,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   function gamesToggle(){
     event.preventDefault();
+    console.log('displaying games');
     $('.chooseGame').slideToggle();
   }
 
@@ -132,7 +133,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           finalScores.push(data.score.value);
         })
       }
-    }, 100)
+    }, 200)
 
     setTimeout(function(){
       for (var i =0; i < finalScores.length-1; i++) {
@@ -183,10 +184,11 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     if (socket.io.engine.id === newGame.socket_id) {
       return inGame(newGame.socket_id)
     } else {
-      console.log("DIFFERENT BROWSER", newGame.players);
-      return $("#notifications")
-        .empty()
-        .append("<li>PLAY  " + newGame.players[0]+"?<a href='#' data-gameid='"+newGame.socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
+      console.log("DIFFERENT BROWSER", newGame);
+      return getGames();
+      // $("#notifications")
+        // .empty()
+        // .append("<li>PLAY  " + newGame.players[0]+"?<a href='#' data-gameid='"+newGame.socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
       // return $(".game-list").html("Game: "+newGame.socket_id+"<span> Players: "+newGame.players.length+"</span><a href='#' data-gameid='"+newGame.socket_id+"' class='join-game'> Join</a></li>");
     }
   })
