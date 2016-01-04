@@ -149,10 +149,13 @@ io.on('connection', function(socket){
       var newScore  = new Score();
       //Need to create new CPU player, like a user otherwise errors 
       var newPlayer            = new User();
+
       newPlayer.local.email      = 'CPU@CPU.com';
       newPlayer.local.firstname  = 'CPU';
       newPlayer.local.lastname   = 'CPU';
       newPlayer.local.password   = 'password';
+
+      newPlayer.save();
 
       newScore.player = newPlayer;
       newScore.save()
@@ -184,7 +187,7 @@ io.on('connection', function(socket){
 
       //correct choice
       if (playerShape === squareClicked) {
-        console.log(player.local.firstname, ' got the grid choice correct!')
+        // console.log(player.local.firstname, ' got the grid choice correct!')
         var squareClickedIndex = game.grid.indexOf(squareClicked);
         var squareToSwapIndex  = Math.floor(Math.random()*game.grid.length);
 
@@ -209,5 +212,13 @@ io.on('connection', function(socket){
       }; 
     });
   });
+  
+  socket.on("endGame", function(game){
+    console.log('remooving CPU');
+    User.findOneAndRemove({_id: game.players[1]}, function(err){
+      if (err) return console.log('CPU DELTEE, Something went wrong.');
+      return console.log('User succesfully deleted');
+    });
+  })
 
 });

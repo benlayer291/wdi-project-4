@@ -16,6 +16,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.finalScores      = [];
   self.waitingGames     = [];
   self.gameTime         = 30;
+  self.cpuShape;
 
   self.squares     = new Array(9);
   self.getGames    = getGames;
@@ -23,10 +24,14 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.init        = init;
   self.start       = start;
   self.join        = join;
+  self.cpuJoin     = cpuJoin;
   self.inGame      = inGame;
   self.playGame    = playGame;
   self.gameTimer   = gameTimer;
+  self.cpuPlay     = cpuPlay;
 
+  self.cpuClickEvent    = cpuClickEvent;
+  self.setUpCpuShape    = setUpCpuShape;
   self.setUpPlayerShape = setUpPlayerShape;
 
   function init(){
@@ -71,6 +76,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     console.log("creating player is", self.creatingPlayer);
     return socket.emit('newGame', socketId, self.creatingPlayer);
   }
+
   // GAMEID BEING DEFINED FOR FIRST TIME NOW THAT BOTH HAVE JOINED
   function join(){
     event.preventDefault();
@@ -97,11 +103,14 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     return self.gameid;
   }
 
-  function setUpPlayerShape(game) {
+  function setUpPlayerShape(game){
     // var socketId    = socket.io.engine.id;
     var playerShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
-
     return $('#player-selected-gridsquare').html(playerShape);
+  }
+
+  function setUpCpuShape(game){
+    return self.cpuShape = game.grid[(Math.floor(Math.random()*game.grid.length))];
   }
 
   function playGame(index){
@@ -114,7 +123,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
   }
 
-  function gameTimer(game) {
+  function gameTimer(game, CPU) {
     // var gameTime = self.gameTime;
     
     $('.timer').html('TIME: ' + self.gameTime);
@@ -125,6 +134,9 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       } else {
         $('.game-gridsquare').off('click');
         clearInterval(timeRemaining);
+        if (CPU === true) {
+          socket.emit('endGame', game);
+        }
         endGame(game);
       }
       $('.timer').html('TIME: ' + self.gameTime);
@@ -141,7 +153,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     var cpuMove = setInterval(function(){
 
       if(self.gameTime > 0) {
-        cpuClickEvent();
+        cpuClickEvent(game);
       } else {
         clearInterval(cpuPlay);
         $('.game-gridsquare').off('click');
@@ -149,8 +161,23 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     }, interval);
   }
 
-  function cpuClickEvent() {
-    console.log('CPU CLICK');
+  function cpuClickEvent(game) {
+    console.log('******', game.players);
+    User.get({id: game.players[1]}, function(data){
+      var player = data.user;
+      var gameId                = game.socket_id;
+      var socketId              = socket.io.engine.id;
+      // var player                = game.players[1];
+      console.log(player)
+      var playerShape           = self.cpuShape;
+      var cpuSelectedShapeIndex = game.grid.indexOf(playerShape);
+      var squareClicked         = $('#'+cpuSelectedShapeIndex).html();
+      console.log('CPU clicked', squareClicked);
+      console.log(player);
+      // return $('#'+cpuSelectedShapeIndex).trigger('click');
+      socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
+      return setUpCpuShape(game);
+    });
   }
 
   function endGame(game) {
@@ -204,7 +231,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         }
       }
     },500);
-  //need to return socket.emit('endGame') so that cpu user is deleted?
+  // return socket.emit('endGame', game);
   }
 
 
@@ -241,7 +268,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           .empty()
           .append('<li>GO!</li>');
         clearInterval(countdownRemaining);
-        gameTimer(game);
+        gameTimer(game, false);
       }
       $('.timer').html('TIME ' + countdownTime);
     }, 1000);
@@ -282,7 +309,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           .empty()
           .append('<li>GO!</li>');
         clearInterval(countdownRemaining);
-        gameTimer(game);
+        gameTimer(game, true);
         cpuPlay(game);
       }
       $('.timer').html('TIME ' + countdownTime);
@@ -306,6 +333,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     }
     // Setup player shapes
     setUpPlayerShape(game);
+    setUpCpuShape(game);
   });
 
   socket.on('correctChoice', function(game, socketId, score){
