@@ -52,14 +52,12 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       }
       if (self.waitingGames.length<1) {
         $("#notifications")
-          .empty()
           .append("<li class='chooseGame'>IF NO GAMES, PLAY NEW GAME</li>")
       }
       console.log('Current games to play',self.waitingGames);
       for (var i=0; i<self.waitingGames.length; i++){
         if (self.waitingGames[i].players[0]._id !== CurrentUser.user._id) {
           $("#notifications")
-            .empty()
             .append("<li class='chooseGame'>PLAY  " + self.waitingGames[i].players[0].local.firstname+ " "+ self.waitingGames[i].players[0].local.lastname+ "?<a href='#' data-gameid='"+self.waitingGames[i].socket_id+"' class='join-game animated fadeIn'>  JOIN</a></li>");
         }
       }
