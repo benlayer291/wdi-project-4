@@ -45,15 +45,12 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   };
 
   function getGames(){
+    $("#notifications").append("<li class='chooseGame'>IF NO GAMES, PLAY NEW GAME</li>")
     Game.query(function(data){
       for (var i=0; i<data.games.length; i++){
         if (data.games[i].players.length<2) {
           self.waitingGames.push(data.games[i]);
         }
-      }
-      if (self.waitingGames.length<1) {
-        $("#notifications")
-          .append("<li class='chooseGame'>IF NO GAMES, PLAY NEW GAME</li>")
       }
       console.log('Current games to play',self.waitingGames);
       for (var i=0; i<self.waitingGames.length; i++){
