@@ -41,6 +41,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     console.log("current user is",CurrentUser.user);
     $("#notifications").on("click", ".join-game", join);
     $("#notifications").on("click", ".cpu-join-game", cpuJoin);
+    return getGames();
   };
 
   function getGames(){
@@ -232,8 +233,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   //SOCKET LISTENING EVENTS
   socket.on('connect', function(){
-    console.log('connected', socket.io.engine.id);
-    return getGames();
+    return console.log('connected', socket.io.engine.id);
   });
 
   socket.on('addToListOfGames', function(newGame){
