@@ -173,8 +173,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       var squareClicked         = $('#'+cpuSelectedShapeIndex).html();
       var CPU                   = true;
       console.log('CPU clicked', squareClicked);
-
-      // return $('#'+cpuSelectedShapeIndex).trigger('click');
+      setUpCpuShape(game);
       return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked, CPU);
     });
   }
@@ -361,9 +360,6 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         .html(game.grid[i])
         .attr('data-gameid', game.socket_id);
       }
-
-      // CPU gets a new shape
-      setUpCpuShape(game);
 
       // Player gets a point
       $('#score-'+score.player).html('SCORE: ' + score.value);
