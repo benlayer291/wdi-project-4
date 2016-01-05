@@ -226,7 +226,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           }
         }
       }
-    },600);
+    },1000);
   }
 
 
