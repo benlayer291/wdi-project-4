@@ -190,7 +190,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           finalScores.push(data.score.value);
         })
       }
-    }, 400);
+    }, 500);
 
     setTimeout(function(){
       console.log(finalScores);
@@ -226,8 +226,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           }
         }
       }
-    },500);
-  // return socket.emit('endGame', game);
+    },550);
   }
 
 
