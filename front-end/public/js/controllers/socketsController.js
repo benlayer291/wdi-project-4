@@ -202,8 +202,8 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         } else if (self.finalScores[i] > self.finalScores[i+1]) {
           console.log('screen 1 wins');
           console.log(CurrentUser.user);
-          console.log(endGame.players[i]);
-          if (CurrentUser.user._id === endGame.players[i]._id) {
+          console.log(self.endGame.players[i]);
+          if (CurrentUser.user._id === self.endGame.players[i]._id) {
             $('#notifications')
             .empty()
             .append('<li class="animated fadeIn">YOU WIN</li>');
@@ -214,7 +214,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           }
         } else {
           console.log('screen 2 wins');
-          if (CurrentUser.user._id === endGame.players[i]._id) {
+          if (CurrentUser.user._id === self.endGame.players[i]._id) {
             $('#notifications')
             .empty()
             .append('<li class="animated fadeIn">YOU LOSE</li>');
