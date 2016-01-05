@@ -18,6 +18,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.gameTime         = 30;
   self.gridDisabled     = true;
   self.cpuShape;
+  self.endGame;
 
   self.squares     = new Array(9);
   self.getGames    = getGames;
@@ -175,30 +176,30 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   }
 
   function endGame(game) {
-    var endGame;
-    var finalScores = [];
+    // var endGame;
+    // var finalScores = [];
     Game.get({id:game._id}, function(data){
-      endGame = data.game
+      self.endGame = data.game
     })
 
     setTimeout(function(){
-      console.log(endGame.scores);
-      for(var i=0; i< endGame.scores.length; i++) {
-        Score.get({id: endGame.scores[i]}, function(data){
-          finalScores.push(data.score.value);
+      console.log(self.endGame.scores);
+      for(var i=0; i< self.endGame.scores.length; i++) {
+        Score.get({id: self.endGame.scores[i]}, function(data){
+          self.finalScores.push(data.score.value);
         })
       }
     }, 1000);
 
     setTimeout(function(){
-      console.log(finalScores);
-      for (var i =0; i < finalScores.length-1; i++) {
-        if (finalScores[i] === finalScores[i+1]) {
+      console.log(self.finalScores);
+      for (var i =0; i < self.finalScores.length-1; i++) {
+        if (self.finalScores[i] === self.finalScores[i+1]) {
           console.log('draw')
           $('#notifications')
           .empty()
           .append('<li class="animated fadeIn">DRAW</li>');
-        } else if (finalScores[i] > finalScores[i+1]) {
+        } else if (self.finalScores[i] > self.finalScores[i+1]) {
           console.log('screen 1 wins');
           console.log(CurrentUser.user);
           console.log(endGame.players[i]);
