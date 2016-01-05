@@ -189,7 +189,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           self.finalScores.push(data.score.value);
         })
       }
-    }, 1000);
+    }, 500);
 
     setTimeout(function(){
       console.log(self.finalScores);
