@@ -180,7 +180,7 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked){
+  socket.on("playingGame", function(gameId, socketId, player, playerShape, squareClicked, CPU){
 
     Game.findOne({socket_id: gameId}, function(err, game){
       if (err) throw err;
@@ -205,7 +205,11 @@ io.on('connection', function(socket){
               score.save();
 
               //send to front-end
-              return io.to(gameRoom).emit('correctChoice', game, socketId, score);
+              if (CPU === true) {
+                return io.to(gameRoom).emit('cpuCorrectChoice', game, score);
+              } else {
+                return io.to(gameRoom).emit('correctChoice', game, socketId, score);
+              }
             });
           };
         };
@@ -215,8 +219,8 @@ io.on('connection', function(socket){
   
   socket.on("endGame", function(game){
     User.findOneAndRemove({_id: game.players[1]}, function(err){
-      if (err) return console.log('CPU DELTEE, Something went wrong.');
-      return console.log('User succesfully deleted');
+      if (err) return console.log('CPU DELETE, Something went wrong.');
+      console.log('User succesfully deleted');
     });
   })
 
