@@ -63,7 +63,7 @@ app.use(express.static(__dirname + '/front-end/public'));
 var http    = require('http').Server(app);
 
 http.listen(port, function(){
-  console.log('***listening on port***', port,"using database");
+  console.log('***listening on', port,'***');
 });
 
 // Create a socket.io server and relate it to the node.js http server
@@ -95,7 +95,7 @@ io.on('connection', function(socket){
       newGame.scores.push(newScore);
       newGame.save();
 
-      console.log("THE NEW GAME", newGame);
+      // console.log("THE NEW GAME", newGame);
 
       io.emit("addToListOfGames", newGame);
     });
@@ -140,7 +140,7 @@ io.on('connection', function(socket){
   });
 
   socket.on("cpuJoinedGame", function(gameId) {
-    console.log('CPU joined game with id', gameId)
+    // console.log('CPU joined game with id', gameId)
     gameRoom = "game_"+gameId;
 
     Game.findOne({socket_id: gameId}, function(err, game){
@@ -197,7 +197,7 @@ io.on('connection', function(socket){
 
         // change the score
         for (var i = 0; i < game.players.length; i++) {
-          console.log("CHECKING PLAYER:", game.players[i])
+          // console.log("CHECKING PLAYER:", game.players[i])
           if (game.players[i] == player._id) {
             Score.findOne({_id: game.scores[i]}, function(err, score){
               if (err) throw err;
@@ -220,7 +220,7 @@ io.on('connection', function(socket){
   socket.on("endGame", function(game){
     User.findOneAndRemove({_id: game.players[1]}, function(err){
       if (err) return console.log('CPU DELETE, Something went wrong.');
-      console.log('User succesfully deleted');
+      return console.log('User succesfully deleted');
     });
   })
 

@@ -37,9 +37,9 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   self.setUpPlayerShape = setUpPlayerShape;
 
   function init(){
-    console.log('initialising');
+    // console.log('initialising');
     CurrentUser.saveUser(TokenService.decodeToken());
-    console.log("current user is",CurrentUser.user);
+    // console.log("current user is",CurrentUser.user);
     $("#notifications").on("click", ".join-game", join);
     $("#notifications").on("click", ".cpu-join-game", cpuJoin);
     return getGames();
@@ -53,7 +53,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
           self.waitingGames.push(data.games[i]);
         }
       }
-      console.log('Current games to play',self.waitingGames);
+      // console.log('Current games to play',self.waitingGames);
       for (var i=0; i<self.waitingGames.length; i++){
         if (self.waitingGames[i].players[0]._id !== CurrentUser.user._id) {
           $("#notifications")
@@ -65,7 +65,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   function gamesToggle(){
     event.preventDefault();
-    console.log('displaying games');
+    // console.log('displaying games');
     $('.chooseGame').slideToggle();
   }
 
@@ -73,7 +73,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     event.preventDefault();
     socketId = socket.io.engine.id;
     self.creatingPlayer = CurrentUser.user;
-    console.log("creating player is", self.creatingPlayer);
+    // console.log("creating player is", self.creatingPlayer);
     return socket.emit('newGame', socketId, self.creatingPlayer);
   }
 
@@ -90,7 +90,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   function cpuJoin(){
     event.preventDefault();
-    console.log($(this).data('gameid'));
+    // console.log($(this).data('gameid'));
     gameId = $(this).data('gameid');
     return socket.emit('cpuJoinedGame', gameId)
   }
@@ -120,12 +120,17 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     var playerShape   = $('#player-selected-gridsquare').html();
     var squareClicked = $('#'+index).html();
 
+    $('#'+index).css('background', '#00C853');
+    setTimeout(function(){
+      $('#'+index).css('background', 'none');
+    }, 250);
+
     return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked);
   }
 
   function gameTimer(game, CPU) {
     
-    $('.timer').html('TIME: ' + self.gameTime);
+    $('#timer').html('TIME: ' + self.gameTime);
     self.gridDisabled = false;
     setTimeout(function(){ $('#notifications').empty() }, 1000)
     var timeRemaining = setInterval(function(){
@@ -137,7 +142,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         self.gridDisabled = true;
         endGame(game);
       }
-      $('.timer').html('TIME: ' + self.gameTime);
+      $('#timer').html('TIME: ' + self.gameTime);
     }, 1000);
     return timeRemaining;
   }
@@ -160,7 +165,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   }
 
   function cpuClickEvent(game) {
-    console.log('******', game.players);
+    // console.log('******', game.players);
     User.get({id: game.players[1]}, function(data){
       var player                = data.user;
       var gameId                = game.socket_id;
@@ -169,8 +174,14 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
       var cpuSelectedShapeIndex = game.grid.indexOf(playerShape);
       var squareClicked         = $('#'+cpuSelectedShapeIndex).html();
       var CPU                   = true;
-      console.log('CPU clicked', squareClicked);
+
+      $('#'+cpuSelectedShapeIndex).css('background', '#00C853');
+      setTimeout(function(){
+        $('#'+cpuSelectedShapeIndex).css('background', 'none');
+      }, 250);
+
       setUpCpuShape(game);
+
       return socket.emit('playingGame', gameId, socketId, player, playerShape, squareClicked, CPU);
     });
   }
@@ -183,7 +194,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     })
 
     setTimeout(function(){
-      console.log(self.endGame.scores);
+      // console.log(self.endGame.scores);
       for(var i=0; i< self.endGame.scores.length; i++) {
         Score.get({id: self.endGame.scores[i]}, function(data){
           self.finalScores.push(data.score.value);
@@ -192,17 +203,17 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
     }, 500);
 
     setTimeout(function(){
-      console.log(self.finalScores);
+      // console.log(self.finalScores);
       for (var i =0; i < self.finalScores.length-1; i++) {
         if (self.finalScores[i] === self.finalScores[i+1]) {
-          console.log('draw')
+          // console.log('draw')
           $('#notifications')
           .empty()
           .append('<li class="animated fadeIn">DRAW</li>');
         } else if (self.finalScores[i] > self.finalScores[i+1]) {
-          console.log('screen 1 wins');
-          console.log(CurrentUser.user);
-          console.log(self.endGame.players[i]);
+          // console.log('screen 1 wins');
+          // console.log(CurrentUser.user);
+          // console.log(self.endGame.players[i]);
           if (CurrentUser.user._id === self.endGame.players[i]._id) {
             $('#notifications')
             .empty()
@@ -213,7 +224,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
             .append('<li class="animated fadeIn">YOU LOSE</li>');
           }
         } else {
-          console.log('screen 2 wins');
+          // console.log('screen 2 wins');
           if (CurrentUser.user._id === self.endGame.players[i]._id) {
             $('#notifications')
             .empty()
@@ -235,24 +246,25 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
   });
 
   socket.on('addToListOfGames', function(newGame){
-    console.log("Game data received from socket.on:addToListOfGames ", newGame.socket_id);
+    // console.log("Game data received from socket.on:addToListOfGames ", newGame.socket_id);
 
     if (socket.io.engine.id === newGame.socket_id) {
       return inGame(newGame.socket_id)
     } else {
-      console.log("DIFFERENT BROWSER", newGame);
+      // console.log("DIFFERENT BROWSER", newGame);
       return getGames();
     }
   })
 
   socket.on('start', function(game){
     var countdownTime = 5;
-    console.log("START GAME INFO:", game);
+    // console.log("START GAME INFO:", game);
     // Countdown Timer
     $('#notifications')
       .empty()
       .append('<li>GET READY</li>');
-    $('.timer').html('TIME: ' + countdownTime);
+    $('#timer')
+      .html('TIME: ' + countdownTime)
     var countdownRemaining = setInterval(function(){
       if(countdownTime > 0) {
         countdownTime--;
@@ -263,7 +275,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         clearInterval(countdownRemaining);
         gameTimer(game, false);
       }
-      $('.timer').html('TIME ' + countdownTime);
+      $('#timer').html('TIME ' + countdownTime);
     }, 1000);
 
     // Setup main-grid- same for both players, comes from server side
@@ -288,12 +300,12 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
 
   socket.on('cpuStart', function(game){
     var countdownTime = 5;
-    console.log("CPU START GAME INFO:", game);
+    // console.log("CPU START GAME INFO:", game);
     // Countdown Timer
     $('#notifications')
       .empty()
       .append('<li>GET READY</li>');
-    $('.timer').html('TIME: ' + countdownTime);
+    $('#timer').html('TIME: ' + countdownTime);
     var countdownRemaining = setInterval(function(){
       if(countdownTime > 0) {
         countdownTime--;
@@ -305,7 +317,7 @@ function SocketsController(Game, Score, User, TokenService, CurrentUser) {
         gameTimer(game, true);
         cpuPlay(game);
       }
-      $('.timer').html('TIME ' + countdownTime);
+      $('#timer').html('TIME ' + countdownTime);
     }, 1000);
 
     // Setup main-grid when timer finishes- same for both players, comes from server side

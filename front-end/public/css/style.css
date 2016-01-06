@@ -245,6 +245,12 @@ body {
   color: #00C853;
 }
 
+#timer {
+  -vendor-animation-duration: 0.5s;
+  -vendor-animation-delay: 0.5s;
+  -vendor-animation-iteration-count: infinite;
+}
+
 #game .game-info {
   min-height: 25px;
   line-height: 25px;
