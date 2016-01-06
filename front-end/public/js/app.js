@@ -1,6 +1,6 @@
 angular
   .module('shapes', ['ngResource', 'angular-jwt', 'ui.router'])
-  .constant('API','http://localhost:3000/api' ||'https://freeshapes.herokuapp.com/api')
+  .constant('API','https://freeshapes.herokuapp.com/api')
   // .constant('API','http://localhost:3000/api')
   .config(MainRouter)
   .config(function($httpProvider){
