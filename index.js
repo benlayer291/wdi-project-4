@@ -59,6 +59,10 @@ app.use("/api", routes);
 // Serve front-end html, js, css from the 'public' directory
 app.use(express.static(__dirname + '/front-end/public'));
 
+app.get('/', function(req, res) {
+  res.render('/front-end/public/index');
+});
+
 // Create a node.js based http server and state the port to listen to
 var http    = require('http').Server(app);
 
