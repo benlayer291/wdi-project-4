@@ -18,13 +18,13 @@ function ScoresController(Score, User, TokenService, CurrentUser) {
     Score.query(function(data){
       self.all = data.scores;
     })
-    console.log(self.all);
+    // console.log(self.all);
   }
 
   function getOneUserScores(user_id) {
     Score.query(function(data){
-      console.log(data.scores[0].player);
-      console.log(self.player);
+      // console.log(data.scores[0].player);
+      // console.log(self.player);
       for (var i=0; i< data.scores.length; i++) {
         if (data.scores[i].player === self.player._id) {
           self.oneUserScores.push(data.scores[i]);
@@ -32,13 +32,13 @@ function ScoresController(Score, User, TokenService, CurrentUser) {
       }
     })
     setTimeout(function(){
-      console.log(self.oneUserScores);
+      // console.log(self.oneUserScores);
     }, 1000);
   }
 
   if (CurrentUser.getUser()) {
     self.player = TokenService.decodeToken();
-    console.log(self.player);
+    // console.log(self.player);
   }
 
   self.getOneUserScores();

@@ -40,13 +40,13 @@ function UsersController(User, TokenService, CurrentUser, $state) {
     self.all  = [];
     self.user = {};
     CurrentUser.clearUser();
-    console.log(CurrentUser.user);
+    // console.log(CurrentUser.user);
   }
 
   function handleLogin(res) {
     var token = res.token ? res.token : null;
     if (token) {
-      console.log("Logging In");
+      // console.log("Logging In");
       $state.go('game');
     }
     // console.log(res);
@@ -63,7 +63,7 @@ function UsersController(User, TokenService, CurrentUser, $state) {
   // Every time page is loaded, check if the user is logged in
   if (CurrentUser.getUser()) {
     self.user = TokenService.decodeToken();
-    console.log(self.user);
+    // console.log(self.user);
   }
 
 return self;
