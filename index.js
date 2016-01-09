@@ -68,6 +68,7 @@ var http    = require('http').Server(app);
 
 http.listen(port, function(){
   console.log('***listening on', port,'***');
+  console.log(config.database);
 });
 
 // Create a socket.io server and relate it to the node.js http server
